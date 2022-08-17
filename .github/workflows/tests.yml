@@ -42,15 +42,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: json, mysqli, curl, dom, exif, fileinfo, hash, imagick, mbstring, openssl, pcre, xml, zip
-          tools: composer:v2
-          coverage: none
 
-      - name: Install Composer dependencies
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer install
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v2
 
       - name: Run PHPUnit
         run: composer run-script phpunit
