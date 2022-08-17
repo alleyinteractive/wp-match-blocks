@@ -32,10 +32,8 @@
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "friendsofphp/php-cs-fixer": "^3.8",
-    "mantle-framework/testkit": "^0.2",
-    "phpunit/phpunit": "^9.5"
+    "mantle-framework/testkit": "^0.2"
   },
   "scripts": {
     "fixer": "php-cs-fixer -v fix --allow-risky=yes",
