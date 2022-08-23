@@ -5,7 +5,7 @@
 Blocks can be matched by:
 
 * Block name or names (`name`)
-* Block attributes (`atts`, `with_atts`)
+* Block attributes (`attrs`, `with_attrs`)
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
 
@@ -415,9 +415,9 @@ $blocks = parse_blocks(
     <<<HTML
 <!-- wp:paragraph --><p>Hello, world!</p><!-- /wp:paragraph -->
 
-<!-- wp:archives {"displayAsDropdown":true,"showPostCounts":true} /-->
+<!-- wp:archives {\"displayAsDropdown\":true,\"showPostCounts\":true} /-->
 
-<!-- wp:media-text {"mediaId":617,"mediaType":"image","isStackedOnMobile":false,"className":"alignwide"} -->
+<!-- wp:media-text {\"mediaId\":617,\"mediaType\":\"image\",\"isStackedOnMobile\":false,\"className\":\"alignwide\"} -->
 HTML
 );
 
