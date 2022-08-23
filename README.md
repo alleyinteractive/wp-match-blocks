@@ -27,7 +27,7 @@ Find all paragraph blocks in a post:
 ```php
 <?php
 
-$grafs = \Alley\match_blocks( $post, [ 'name' => 'core/paragraph' ] );
+$grafs = \Alley\WP\match_blocks( $post, [ 'name' => 'core/paragraph' ] );
 ```
 
 Include paragraphs in inner blocks:
@@ -35,7 +35,7 @@ Include paragraphs in inner blocks:
 ```php
 <?php
 
-$grafs = \Alley\match_blocks(
+$grafs = \Alley\WP\match_blocks(
     $post,
     [
         'flatten' => true,
@@ -49,7 +49,7 @@ Get the number of paragraph blocks:
 ```php
 <?php
 
-$count = \Alley\match_blocks(
+$count = \Alley\WP\match_blocks(
     $post,
     [
         'count' => true,
@@ -63,7 +63,7 @@ Get all paragraphs and headings:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     '<!-- wp:paragraph -->...',
     [
         'name' => [ 'core/heading', 'core/paragraph' ],
@@ -76,7 +76,7 @@ Get only paragraphs that have been explicitly aligned:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     [ /* blocks */ ],
     [
         'name'       => 'core/paragraph',
@@ -90,7 +90,7 @@ Get only paragraphs that have been right-aligned:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -109,7 +109,7 @@ Get only paragraphs that have been aligned, but not to the right:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -129,7 +129,7 @@ Get only paragraphs that have been aligned to the left or the right:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -149,7 +149,7 @@ Get all images credited to the Associated Press:
 ```php
 <?php
 
-$grafs = \Alley\match_blocks(
+$grafs = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -174,7 +174,7 @@ Get the first three blocks:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'limit' => 3,
@@ -187,7 +187,7 @@ Get the first three paragraph blocks:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'limit' => 3,
@@ -201,7 +201,7 @@ Get the third paragraph:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'name'        => 'core/paragraph',
@@ -211,7 +211,7 @@ $blocks = \Alley\match_blocks(
 
 // Or, skip straight to the parsed block:
 
-$block = \Alley\match_block(
+$block = \Alley\WP\match_block(
     $post,
     [
         'name'        => 'core/paragraph',
@@ -225,7 +225,7 @@ Get every third paragraph:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'name'        => 'core/paragraph',
@@ -239,7 +239,7 @@ Get paragraphs 3-8:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'name'        => 'core/paragraph',
@@ -253,7 +253,7 @@ Get the block at position 3 in the set if it's a paragraph:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'name'     => 'core/paragraph',
@@ -267,7 +267,7 @@ Get the last two blocks:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'position' => [ -1, -2 ],
@@ -280,7 +280,7 @@ Get all non-empty blocks:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks( $post );
+$blocks = \Alley\WP\match_blocks( $post );
 ```
 
 Get all empty blocks:
@@ -288,7 +288,7 @@ Get all empty blocks:
 ```php
 <?php
 
-$blocks = \Alley\match_blocks(
+$blocks = \Alley\WP\match_blocks(
     $post,
     [
         'name'              => null,
