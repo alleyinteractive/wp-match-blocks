@@ -415,9 +415,9 @@ $blocks = parse_blocks(
     <<<HTML
 <!-- wp:paragraph --><p>Hello, world!</p><!-- /wp:paragraph -->
 
-<!-- wp:archives {\"displayAsDropdown\":true,\"showPostCounts\":true} /-->
+<!-- wp:archives {"displayAsDropdown":true,"showPostCounts":true} /-->
 
-<!-- wp:media-text {\"mediaId\":617,\"mediaType\":\"image\",\"isStackedOnMobile\":false,\"className\":\"alignwide\"} -->
+<!-- wp:media-text {"mediaId":617,"mediaType":"image","isStackedOnMobile":false,"className":"alignwide"} -->
 HTML
 );
 
