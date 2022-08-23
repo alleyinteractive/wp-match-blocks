@@ -28,7 +28,7 @@
   },
   "require": {
     "php": "^7.4 || ^8.0",
-    "alleyinteractive/laminas-validator-extensions": "dev-feature/supporting-validators"
+    "alleyinteractive/laminas-validator-extensions": "^1.1.0"
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3",
