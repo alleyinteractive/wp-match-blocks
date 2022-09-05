@@ -20,7 +20,15 @@ Additionally:
 
 `match_blocks()` is powered by a set of block validation classes that utilize the [Laminas Validator](https://docs.laminas.dev/laminas-validator/) framework and [Laminas Validator Extensions](https://github.com/alleyinteractive/laminas-validator-extensions) package. These validators, along with a base class for validating blocks, are included here. [See the validators section for their documentation](#validators).
 
-## Examples
+## Installation
+
+Install the latest version with:
+
+```bash
+$ composer require alleyinteractive/wp-match-blocks
+```
+
+## Basic usage
 
 Find all paragraph blocks in a post:
 
@@ -467,3 +475,13 @@ $blocks = parse_blocks( "\n" );
 $valid = new \Alley\WP\Validator\Nonempty_Block();
 $valid->isValid( $blocks[0] ); // false
 ```
+
+## About
+
+### License
+
+[GPL-2.0-or-later](https://github.com/alleyinteractive/wp-caper/blob/main/LICENSE)
+
+### Maintainers
+
+[Alley Interactive](https://github.com/alleyinteractive)
