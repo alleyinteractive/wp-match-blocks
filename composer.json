@@ -19,8 +19,6 @@
     ]
   },
   "config": {
-    "optimize-autoloader": true,
-    "classmap-authoritative": true,
     "allow-plugins": {
       "alleyinteractive/composer-wordpress-autoloader": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
