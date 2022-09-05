@@ -22,7 +22,8 @@
     "allow-plugins": {
       "alleyinteractive/composer-wordpress-autoloader": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    },
+    "lock": false
   },
   "require": {
     "php": "^7.4 || ^8.0",
