@@ -480,7 +480,7 @@ $valid->isValid( $blocks[0] ); // false
 
 ### License
 
-[GPL-2.0-or-later](https://github.com/alleyinteractive/wp-caper/blob/main/LICENSE)
+[GPL-2.0-or-later](https://github.com/alleyinteractive/wp-match-blocks/blob/main/LICENSE)
 
 ### Maintainers
 
