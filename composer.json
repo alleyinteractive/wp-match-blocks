@@ -11,8 +11,8 @@
   ],
   "autoload": {
     "files": [
-      "src/Alley/WP/match-blocks.php",
-      "src/Alley/WP/Internals/internals.php"
+      "src/alley/wp/match-blocks.php",
+      "src/alley/wp/internals/internals.php"
     ]
   },
   "config": {
@@ -40,10 +40,10 @@
   "extra": {
     "wordpress-autoloader": {
       "autoload": {
-        "Alley\\": "src/Alley/"
+        "Alley\\": "src/alley/"
       },
       "autoload-dev": {
-        "Alley\\": "tests/Alley/"
+        "Alley\\": "tests/alley/"
       }
     }
   }
