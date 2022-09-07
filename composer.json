@@ -10,21 +10,17 @@
     }
   ],
   "autoload": {
-    "classmap": [
-      "src/"
-    ],
     "files": [
-      "src/Alley/WP/match-blocks.php",
-      "src/Alley/WP/Internals/internals.php"
+      "src/alley/wp/match-blocks.php",
+      "src/alley/wp/internals/internals.php"
     ]
   },
   "config": {
-    "optimize-autoloader": true,
-    "classmap-authoritative": true,
     "allow-plugins": {
       "alleyinteractive/composer-wordpress-autoloader": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    },
+    "lock": false
   },
   "require": {
     "php": "^7.4 || ^8.0",
@@ -33,7 +29,7 @@
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3",
     "friendsofphp/php-cs-fixer": "^3.8",
-    "mantle-framework/testkit": "^0.2"
+    "mantle-framework/testkit": "^0.5"
   },
   "scripts": {
     "fixer": "php-cs-fixer -v fix --allow-risky=yes",
@@ -43,7 +39,12 @@
   },
   "extra": {
     "wordpress-autoloader": {
-      "inject": true
+      "autoload": {
+        "Alley\\": "src/alley/"
+      },
+      "autoload-dev": {
+        "Alley\\": "tests/alley/"
+      }
     }
   }
 }
