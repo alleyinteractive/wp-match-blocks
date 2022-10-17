@@ -20,8 +20,10 @@ use Laminas\Validator\ValidatorChain;
 /**
  * Match blocks within the given content.
  *
- * @param array|int|\WP_Post|string $source Array of blocks, post ID or object with blocks in `post_content`, or string of block HTML.
- * @param array                     $args   {
+ * @param array[]|int|\WP_Post|string|\WP_Block_Parser_Block|array $source Array of blocks, post ID or object with blocks in `post_content`,
+ *                                                                         string of block HTML, or single parsed block. When a single block
+ *                                                                         is passed, its inner blocks will be matched.
+ * @param array                                                    $args   {
  *    Optional. Array of arguments for matching which blocks to return. The defaults serve to match all non-empty blocks.
  *
  *    @type array                     $attrs             {
@@ -81,6 +83,10 @@ function match_blocks( $source, $args = [] ) {
 	$blocks = [];
 	$error  = $args['count'] ? 0 : [];
 
+	if ( $source instanceof \WP_Block_Parser_Block ) {
+		$source = (array) $source;
+	}
+
 	if ( \is_array( $source ) ) {
 		$blocks = $source;
 	}
@@ -97,6 +103,10 @@ function match_blocks( $source, $args = [] ) {
 
 	if ( \is_string( $source ) ) {
 		$blocks = parse_blocks( $source );
+	}
+
+	if ( \is_array( $blocks ) && isset( $blocks['innerBlocks'] ) ) {
+		$blocks = $blocks['innerBlocks'];
 	}
 
 	if ( ! wp_is_numeric_array( $blocks ) || 0 === \count( $blocks ) ) {
