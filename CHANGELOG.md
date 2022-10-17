@@ -4,7 +4,9 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 ## Unreleased
 
-Nothing yet.
+### Added
+
+- Passing a single block instance will return matches within its inner blocks.
 
 ## 1.0.1
 

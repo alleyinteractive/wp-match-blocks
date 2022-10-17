@@ -30,6 +30,27 @@ final class Test_Match_Blocks_Source extends Test_Case {
 	}
 
 	/**
+	 * A single block instance should match its inner blocks.
+	 */
+	public function test_single_block_source() {
+		$html   = '<!-- wp:foo --><!-- wp:bar /--><!-- wp:baz /--><!-- wp:bat /--><!-- /wp:foo -->';
+		$blocks = parse_blocks( $html );
+		$first  = array_shift( $blocks );
+
+		$this->assertCount( 3, match_blocks( $first ) );
+
+		$first = new \WP_Block_Parser_Block(
+			$first['blockName'],
+			$first['attrs'],
+			$first['innerBlocks'],
+			$first['innerHTML'],
+			$first['innerContent'],
+		);
+
+		$this->assertCount( 3, match_blocks( $first ) );
+	}
+
+	/**
 	 * Posts with no content should not return blocks.
 	 */
 	public function test_empty_source() {

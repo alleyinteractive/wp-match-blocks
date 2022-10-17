@@ -1,6 +1,6 @@
 # Match Blocks
 
-`match_blocks()` selects the blocks in post content, or a given set of blocks or block HTML, that match the given criteria, such as the block name, block attributes, or position within the set of blocks.
+`match_blocks()` selects the blocks in post content, or in a given set of blocks, inner blocks, or block HTML, that match the given criteria, such as the block name, block attributes, or position within the set of blocks.
 
 Blocks can be matched by:
 
@@ -17,6 +17,7 @@ Additionally:
 * The set of matching blocks can be limited by size (`limit`) or their position in the set of matches (`nth_of_type`).
 * The number of matches can be returned instead of the matched blocks (`count`).
 * The companion `match_block()` function reduces the filtered set of results to a single parsed block.
+* Passing a single block instance will return matches from its inner blocks.
 
 `match_blocks()` is powered by a set of block validation classes that utilize the [Laminas Validator](https://docs.laminas.dev/laminas-validator/) framework and [Laminas Validator Extensions](https://github.com/alleyinteractive/laminas-validator-extensions) package. These validators, along with a base class for validating blocks, are included here. [See the validators section for their documentation](#validators).
 
@@ -66,13 +67,29 @@ $count = \Alley\WP\match_blocks(
 );
 ```
 
+Get the number of paragraph blocks that are inner blocks of the given group block:
+
+```php
+<?php
+
+$blocks = parse_blocks( '<!-- wp:group --><div class="wp-block-group"><!-- wp:paragraph -->…<!-- wp:group /-->' );
+
+$count = \Alley\WP\match_blocks(
+    $blocks[0],
+    [
+        'count' => true,
+        'name'  => 'core/paragraph',
+    ]
+);
+```
+
 Get all paragraphs and headings:
 
 ```php
 <?php
 
 $blocks = \Alley\WP\match_blocks(
-    '<!-- wp:paragraph -->...',
+    '<!-- wp:paragraph -->…',
     [
         'name' => [ 'core/heading', 'core/paragraph' ],
     ]
