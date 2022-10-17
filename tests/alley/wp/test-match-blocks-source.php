@@ -30,7 +30,7 @@ final class Test_Match_Blocks_Source extends Test_Case {
 	}
 
 	/**
-	 * A single parsed block should match its inner blocks.
+	 * A single block instance should match its inner blocks.
 	 */
 	public function test_single_block_source() {
 		$html   = '<!-- wp:foo --><!-- wp:bar /--><!-- wp:baz /--><!-- wp:bat /--><!-- /wp:foo -->';

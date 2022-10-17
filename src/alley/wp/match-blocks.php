@@ -20,11 +20,11 @@ use Laminas\Validator\ValidatorChain;
 /**
  * Match blocks within the given content.
  *
- * @param array[]|int|\WP_Post|string|\WP_Block_Parser_Block|array $source Array of blocks, post ID or object with blocks in `post_content`,
- *                                                                         string of block HTML, or single parsed block. When a single block
- *                                                                         is passed, its inner blocks will be matched.
+ * @param int|\WP_Post|string|array[]|\WP_Block_Parser_Block|array $source Post ID or object with blocks in `post_content`, string of block HTML,
+ *                                                                         array of blocks, or a single block instance. Passing a single block
+ *                                                                         will return matches from its inner blocks.
  * @param array                                                    $args   {
- *    Optional. Array of arguments for matching which blocks to return. The defaults serve to match all non-empty blocks.
+ *    Optional. Array of arguments for matching which blocks to return. The defaults match all non-empty blocks.
  *
  *    @type array                     $attrs             {
  *        Match blocks with the given attributes.
