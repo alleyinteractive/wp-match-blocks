@@ -99,7 +99,7 @@ function match_blocks( $source, $args = [] ) {
 		$blocks = parse_blocks( $source );
 	}
 
-	if ( ! \is_array( $blocks ) || 0 === \count( $blocks ) ) {
+	if ( ! wp_is_numeric_array( $blocks ) || 0 === \count( $blocks ) ) {
 		return $error;
 	}
 
