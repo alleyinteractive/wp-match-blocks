@@ -23,8 +23,8 @@
     "lock": false
   },
   "require": {
-    "php": "^7.4 || ^8.0",
-    "alleyinteractive/laminas-validator-extensions": "^1.1.0"
+    "php": "^8.0",
+    "alleyinteractive/laminas-validator-extensions": "dev-feature/new-validators"
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3",
