@@ -13,11 +13,8 @@
 namespace Alley\WP\Validator;
 
 use Alley\Validator\AlwaysValid;
-use Alley\Validator\Comparison;
-use Alley\Validator\Not;
-use Alley\Validator\OneOf;
+use Alley\Validator\ValidatorByOperator;
 use Laminas\Validator\Exception\InvalidArgumentException;
-use Laminas\Validator\Regex;
 use Laminas\Validator\ValidatorInterface;
 use Traversable;
 use WP_Block;
@@ -122,7 +119,7 @@ final class Block_Attribute extends Block_Validator {
 
 		if ( null !== $next['key'] ) {
 			try {
-				$this->key_validator = self::comparison_validator( $next['key_operator'], $next['key'] );
+				$this->key_validator = new ValidatorByOperator( $next['key_operator'], $next['key'] );
 			} catch ( \Exception $exception ) {
 				throw new InvalidArgumentException( 'Invalid clause for attribute key: ' . $exception->getMessage() );
 			}
@@ -130,7 +127,7 @@ final class Block_Attribute extends Block_Validator {
 
 		if ( self::UNDEFINED !== $next['value'] ) {
 			try {
-				$this->value_validator = self::comparison_validator( $next['operator'], $next['value'] );
+				$this->value_validator = new ValidatorByOperator( $next['operator'], $next['value'] );
 			} catch ( \Exception $exception ) {
 				throw new InvalidArgumentException( 'Invalid clause for attribute value: ' . $exception->getMessage() );
 			}
@@ -245,51 +242,5 @@ final class Block_Attribute extends Block_Validator {
 				|| ! array_filter( $misses )
 			)
 		);
-	}
-
-	/**
-	 * Make validator for given operator/value comparison.
-	 *
-	 * @param string $operator Operator.
-	 * @param mixed  $compared Comparison value.
-	 * @return ValidatorInterface Validator for comparison.
-	 */
-	private static function comparison_validator( $operator, $compared ) {
-		switch ( $operator ) {
-			case 'REGEX':
-			case 'NOT REGEX':
-				$validator = new Regex(
-					[
-						'pattern' => $compared,
-					]
-				);
-				break;
-
-			case 'IN':
-			case 'NOT IN':
-				$validator = new OneOf(
-					[
-						'haystack' => $compared,
-					],
-				);
-				break;
-
-			default:
-				$validator = new Comparison(
-					[
-						'operator' => $operator,
-						'compared' => $compared,
-					],
-				);
-		}
-
-		if ( 'NOT REGEX' === $operator || 'NOT IN' === $operator ) {
-			$validator = new Not(
-				$validator,
-				__( 'Invalid comparison', 'alley' ),
-			);
-		}
-
-		return $validator;
 	}
 }
