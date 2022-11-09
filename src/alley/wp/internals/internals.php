@@ -13,9 +13,8 @@
 namespace Alley\WP\Internals;
 
 use Alley\Validator\AnyValidator;
-use Alley\Validator\AlwaysValid;
+use Alley\Validator\FastValidatorChain;
 use Alley\WP\Validator\Block_Attribute;
-use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 
 /**
@@ -76,13 +75,7 @@ function parse_attrs_clauses( array $args ): ValidatorInterface {
 	}
 
 	if ( 'AND' === $relation ) {
-		$validator = new ValidatorChain();
-
-		while ( $chain ) {
-			$validator->attach( array_shift( $chain ), true );
-		}
-
-		return $validator;
+		return new FastValidatorChain( $chain );
 	}
 
 	// If it's not AND then it's OR.

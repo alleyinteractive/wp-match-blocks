@@ -12,11 +12,11 @@
 
 namespace Alley\WP;
 
+use Alley\Validator\FastValidatorChain;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
 use Alley\WP\Validator\Nonempty_Block;
-use Laminas\Validator\ValidatorChain;
 
 /**
  * Match blocks within the given content.
@@ -121,13 +121,10 @@ function match_blocks( $source, $args = [] ) {
 	}
 
 	try {
-		$validator = new ValidatorChain();
+		$validator = new FastValidatorChain( [] );
 
 		if ( $args['skip_empty_blocks'] ) {
-			$validator->attach(
-				new Nonempty_Block(),
-				true,
-			);
+			$validator->attach( new Nonempty_Block() );
 		}
 
 		if ( '' !== $args['name'] ) {
@@ -137,7 +134,6 @@ function match_blocks( $source, $args = [] ) {
 						'name' => $args['name'],
 					],
 				),
-				true,
 			);
 		}
 
@@ -150,7 +146,6 @@ function match_blocks( $source, $args = [] ) {
 						'skip_empty_blocks' => $args['skip_empty_blocks'],
 					],
 				),
-				true,
 			);
 		}
 
@@ -170,7 +165,6 @@ function match_blocks( $source, $args = [] ) {
 		if ( $args['attrs'] && \is_array( $args['attrs'] ) ) {
 			$validator->attach(
 				Internals\parse_attrs_clauses( $args['attrs'] ),
-				true,
 			);
 		}
 
@@ -182,7 +176,6 @@ function match_blocks( $source, $args = [] ) {
 						'operator' => 'LIKE',
 					],
 				),
-				true,
 			);
 		}
 	} catch ( \Exception $exception ) {
