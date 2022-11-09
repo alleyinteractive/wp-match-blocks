@@ -12,6 +12,7 @@
 
 namespace Alley\WP;
 
+use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
 use Alley\WP\Validator\Nonempty_Block;
@@ -61,6 +62,7 @@ use Laminas\Validator\ValidatorChain;
  *    @type bool                      $skip_empty_blocks Ignore blocks representing white space. Default true.
  *    @type string|string[]           $with_attrs        Match blocks with non-empty values for this attribute or these attributes.
  *                                                       Blocks must match all of the given `$with_attrs` and `$attrs`.
+ *    @type string                    $with_innerhtml    Match blocks whose `innerHTML` property contains this content, ignoring case.
  * }
  * @return array[]|int Array of found blocks or count thereof.
  */
@@ -77,6 +79,7 @@ function match_blocks( $source, $args = [] ) {
 			'position'          => null,
 			'skip_empty_blocks' => true,
 			'with_attrs'        => [],
+			'with_innerhtml'    => null,
 		],
 	);
 
@@ -167,6 +170,18 @@ function match_blocks( $source, $args = [] ) {
 		if ( $args['attrs'] && \is_array( $args['attrs'] ) ) {
 			$validator->attach(
 				Internals\parse_attrs_clauses( $args['attrs'] ),
+				true,
+			);
+		}
+
+		if ( \is_string( $args['with_innerhtml'] ) || $args['with_innerhtml'] instanceof \Stringable ) {
+			$validator->attach(
+				new Block_InnerHTML(
+					[
+						'content'  => $args['with_innerhtml'],
+						'operator' => 'LIKE',
+					],
+				),
 				true,
 			);
 		}
