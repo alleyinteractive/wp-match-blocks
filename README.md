@@ -6,6 +6,7 @@ Blocks can be matched by:
 
 * Block name or names (`name`)
 * Block attributes (`attrs`, `with_attrs`)
+* Block inner HTML (`with_innerhtml`)
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
 
@@ -174,7 +175,7 @@ Get all images credited to the Associated Press:
 ```php
 <?php
 
-$grafs = \Alley\WP\match_blocks(
+$images = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -190,6 +191,20 @@ $grafs = \Alley\WP\match_blocks(
             'relation' => 'OR',
         ],
         'name'  => 'core/image',
+    ]
+);
+```
+
+Get only lists that contain list items:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'name'           => 'core/list',
+        'with_innerhtml' => '<li',
     ]
 );
 ```
