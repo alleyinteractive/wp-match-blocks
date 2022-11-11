@@ -1,6 +1,6 @@
 <?php
 /**
- * Class file for Test_InnerBlocks_Count
+ * Class file for Test_Block_InnerBlocks_Count
  *
  * (c) Alley <info@alley.co>
  *
@@ -17,7 +17,7 @@ use Mantle\Testkit\Test_Case;
 /**
  * Unit tests for the inner blocks count validator.
  */
-final class Test_InnerBlocks_Count extends Test_Case {
+final class Test_Block_InnerBlocks_Count extends Test_Case {
 	/**
 	 * Test that valid input with the given options is marked as valid.
 	 *
@@ -27,7 +27,7 @@ final class Test_InnerBlocks_Count extends Test_Case {
 	 * @param array $options Options.
 	 */
 	public function test_valid_input( $input, $options ) {
-		$validator = new InnerBlocks_Count( $options );
+		$validator = new Block_InnerBlocks_Count( $options );
 		$this->assertTrue( $validator->isValid( $input ) );
 	}
 
@@ -116,7 +116,7 @@ final class Test_InnerBlocks_Count extends Test_Case {
 	 * @param array $messages Expected error messages.
 	 */
 	public function test_invalid_input( $input, $options, $messages ) {
-		$validator = new InnerBlocks_Count( $options );
+		$validator = new Block_InnerBlocks_Count( $options );
 		$this->assertFalse( $validator->isValid( $input ) );
 		$this->assertSame( $messages, $validator->getMessages() );
 	}

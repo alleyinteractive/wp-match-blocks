@@ -1,6 +1,6 @@
 <?php
 /**
- * InnerBlocks_Count class file
+ * Block_InnerBlocks_Count class file
  *
  * (c) Alley <info@alley.co>
  *
@@ -23,7 +23,7 @@ use WP_Error;
 /**
  * Validates whether the given block has a number of inner blocks.
  */
-final class InnerBlocks_Count extends Block_Validator {
+final class Block_InnerBlocks_Count extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
