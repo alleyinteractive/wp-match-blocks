@@ -46,6 +46,8 @@
         <properties>
             <property name="customPropertiesWhitelist" type="array">
                 <element value="blockName"/>
+                <element value="innerBlocks"/>
+                <element value="innerHTML"/>
                 <element value="messageTemplates"/>
                 <element value="messageVariables"/>
             </property>

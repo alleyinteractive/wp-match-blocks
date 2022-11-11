@@ -51,7 +51,7 @@ final class Block_Attribute extends Block_Validator {
 	 *
 	 * @var string[]
 	 */
-	protected $messageTemplates = [ // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+	protected $messageTemplates = [
 		self::NO_MATCHING_KEY   => '',
 		self::NO_MATCHING_VALUE => '',
 	];

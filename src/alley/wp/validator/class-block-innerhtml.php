@@ -47,7 +47,7 @@ final class Block_InnerHTML extends Block_Validator {
 	 */
 	protected $options = [
 		'content'  => '',
-		'operator' => 'CONTAINS',
+		'operator' => 'LIKE',
 	];
 
 	/**
@@ -105,7 +105,7 @@ final class Block_InnerHTML extends Block_Validator {
 	 * @param WP_Block_Parser_Block $block The block to test.
 	 */
 	protected function test_block( WP_Block_Parser_Block $block ): void {
-		if ( ! $this->valid_html->isValid( $block->innerHTML ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		if ( ! $this->valid_html->isValid( $block->innerHTML ) ) {
 			$this->error( self::NO_MATCHING_INNERHTML );
 		}
 	}

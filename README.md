@@ -359,7 +359,7 @@ The following options are supported for `Alley\WP\Validator\Block_Attribute`:
 
 - `key`: The name of a block attribute, or an array of names, or a regular expression pattern. Default none.
 - `value`: A block attribute value, or an array of values, or regular expression pattern. Default none.
-- `operator`: The operator with which to compare `$value` to block attributes. Accepts `IN`, `NOT IN`, `REGEXP`, `NOT REGEXP`, or any operator supported by `\Alley\Validator\Comparison`. Default is `===`.
+- `operator`: The operator with which to compare `$value` to block attributes.  Accepts the [common comparison operators](#common-comparison-options) (see below).
 - `key_operator`: Equivalent to `operator` but for `$key`.
 
 #### Basic usage
@@ -398,6 +398,49 @@ $valid = new Alley\WP\Validator\Block_Attribute(
         'key_operator' => 'REGEX',
         'value'        => [ 'audio', 'document' ],
         'operator'     => 'NOT IN',
+    ],
+);
+```
+### `Block_InnerHTML`
+
+`Alley\WP\Validator\Block_InnerHTML` validates whether the block contains, or does not contain, the specified content in its `innerHTML` property. The block passes if it contains an `innerHTML` value that matches the comparison.
+
+#### Supported options
+
+The following options are supported for `Alley\WP\Validator\Block_InnerHTML`:
+
+- `content`: The content to find or a regular expression pattern.
+- `operator`: The operator with which to compare `$content` to the block inner HTML. Accepts the [common comparison operators](#common-comparison-options) (see below).
+
+#### Basic usage
+
+```php
+<?php
+
+// '
+// <!-- wp:paragraph -->
+// <p>The goal of this new editor is to make adding rich content to WordPress simple and enjoyable.</p>
+// <!-- /wp:paragraph -->
+// '
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => 'wordpress',
+        'operator' => 'LIKE',
+    ],
+);
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => 'WordPress',
+        'operator' => 'CONTAINS',
+    ],
+);
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => '/^\s*<p>\s*</p>/',
+        'operator' => 'NOT REGEX',
     ],
 );
 ```
@@ -507,6 +550,18 @@ $blocks = parse_blocks( "\n" );
 $valid = new \Alley\WP\Validator\Nonempty_Block();
 $valid->isValid( $blocks[0] ); // false
 ```
+
+### Common comparison options
+
+Many validator options accept a common set of comparison operators. These are:
+
+* `CONTAINS` and `NOT CONTAINS`, a case-sensitive search for a given string.
+* `IN` and `NOT IN`, a strict search for an item in a given array.
+* `LIKE` and `NOT LIKE`, a case-insensitive search for a given string.
+* `REGEX` and `NOT REGEX`, a regular expression match for a given string.
+* `==`, `===`, `!=`, `<>`, `!==`, `<`, `>`, `<=`, and `>=`.
+
+For more details, see [the `\Alley\Validator\ValidatorByOperator` class in Laminas Validator Extensions](https://github.com/alleyinteractive/laminas-validator-extensions).
 
 ## About
 
