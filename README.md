@@ -530,6 +530,59 @@ $valid = new Alley\WP\Validator\Block_Offset(
 $valid->isValid( $blocks[2] ); // true
 ```
 
+### `Block_InnerBlocks_Count`
+
+`Alley\WP\Validator\Block_InnerBlocks_Count` validates whether the number of inner blocks in the given block passes the specified comparison.
+
+The block passes validation if the comparison is true for the count of inner blocks. Inner blocks within inner blocks don't count towards the total.
+
+#### Supported options
+
+The following options are supported for `Alley\WP\Validator\Block_InnerBlocks_Count`:
+
+* `count`: The expected number of inner blocks for the comparison. Default `0`.
+* `operator`: The PHP comparison operator used to compare the input block's inner blocks and `count`.
+
+#### Basic usage
+
+```php
+<?php
+
+$blocks = parse_blocks(
+    <<<HTML
+<!-- wp:foo -->
+    <!-- wp:bar -->
+        <!-- wp:baz /-->
+    <!-- /wp:bar -->
+<!-- /wp:foo -->
+HTML
+);
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 1,
+        'operator' => '===',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 0,
+        'operator' => '>',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 42,
+        'operator' => '<=',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
+```
+
 ### `Nonempty_Block`
 
 `Alley\WP\Validator\Nonempty_Block` validates that the given block is not "empty" -- for example, not a block representing only line breaks.
