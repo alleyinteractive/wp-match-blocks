@@ -16,6 +16,7 @@ use Alley\Validator\FastValidatorChain;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
+use Alley\WP\Validator\Block_InnerBlocks_Count;
 use Alley\WP\Validator\Nonempty_Block;
 
 /**
@@ -45,6 +46,7 @@ use Alley\WP\Validator\Nonempty_Block;
  *        }
  *    }
  *    @type bool                      $count             Return the number of found blocks instead of the set.
+ *    @type bool                      $has_innerblocks   Return only blocks that have, or don't have, inner blocks.
  *    @type bool                      $flatten           Recursively descend into inner blocks, test each one against the
  *                                                       criteria, and count each towards totals. Default false.
  *    @type int                       $limit             Extract at most this many blocks. Default `-1`, or no limit.
@@ -73,6 +75,7 @@ function match_blocks( $source, $args = [] ) {
 			'attrs'             => [],
 			'count'             => false,
 			'flatten'           => false,
+			'has_innerblocks'   => null,
 			'limit'             => -1,
 			'name'              => '',
 			'nth_of_type'       => null,
@@ -174,6 +177,17 @@ function match_blocks( $source, $args = [] ) {
 					[
 						'content'  => $args['with_innerhtml'],
 						'operator' => 'LIKE',
+					],
+				),
+			);
+		}
+
+		if ( null !== $args['has_innerblocks'] ) {
+			$validator->attach(
+				new Block_InnerBlocks_Count(
+					[
+						'count'    => 0,
+						'operator' => $args['has_innerblocks'] ? '>' : '===',
 					],
 				),
 			);

@@ -9,6 +9,7 @@ Blocks can be matched by:
 * Block inner HTML (`with_innerhtml`)
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
+* Whether the block has inner blocks (`has_innerblocks`)
 
 Passing matching parameters is optional; all non-empty blocks match by default.
 
@@ -333,6 +334,32 @@ $blocks = \Alley\WP\match_blocks(
     [
         'name'              => null,
         'skip_empty_blocks' => false,
+    ]
+);
+```
+
+Get only blocks with inner blocks:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'has_innerblocks' => true,
+    ]
+);
+```
+
+Get only blocks without inner blocks:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'has_innerblocks' => false,
     ]
 );
 ```
