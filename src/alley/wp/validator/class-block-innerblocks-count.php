@@ -91,55 +91,7 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 	 * @param array|Traversable $options Validator options.
 	 */
 	public function __construct( $options = null ) {
-		$this->messageTemplates = [
-			'not_equal'                    => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'not_identical'                => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'is_equal'                     => sprintf(
-				/* translators: 1: expected count placeholder */
-				__( 'Number of inner blocks must not be %1$s.', 'alley' ),
-				'%count%',
-			),
-			'is_identical'                 => sprintf(
-				/* translators: 1: expected count placeholder */
-				__( 'Number of inner blocks must not be %1$s.', 'alley' ),
-				'%count%',
-			),
-			'not_less_than'                => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be less than %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'not_greater_than'             => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be greater than %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'not_less_than_or_equal_to'    => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be less than or equal to %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'not_greater_than_or_equal_to' => sprintf(
-				/* translators: 1: expected count placeholder, 2: actual count placeholder */
-				__( 'Number of inner blocks must be greater than or equal to %1$s but is %2$s.', 'alley' ),
-				'%count%',
-				'%value%',
-			),
-			'default'                      => __( 'Invalid number of inner blocks.', 'alley' ),
-		];
+		$this->localize_templates();
 
 		parent::__construct( $options );
 	}
@@ -195,5 +147,63 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 	 */
 	protected function setCount( $count ) {
 		$this->options['count'] = (int) $count;
+	}
+
+	/**
+	 * Localize message templates.
+	 */
+	private function localize_templates(): void {
+		$neq = sprintf(
+			/* translators: 1: expected count placeholder, 2: actual count placeholder */
+			__( 'Number of inner blocks must be %1$s but is %2$s.', 'alley' ),
+			'%count%',
+			'%value%',
+		);
+
+		$ieq = sprintf(
+			/* translators: 1: expected count placeholder */
+			__( 'Number of inner blocks must not be %1$s.', 'alley' ),
+			'%count%',
+		);
+
+		$nlt = sprintf(
+			/* translators: 1: expected count placeholder, 2: actual count placeholder */
+			__( 'Number of inner blocks must be less than %1$s but is %2$s.', 'alley' ),
+			'%count%',
+			'%value%',
+		);
+
+		$ngt = sprintf(
+			/* translators: 1: expected count placeholder, 2: actual count placeholder */
+			__( 'Number of inner blocks must be greater than %1$s but is %2$s.', 'alley' ),
+			'%count%',
+			'%value%',
+		);
+
+		$nlte = sprintf(
+			/* translators: 1: expected count placeholder, 2: actual count placeholder */
+			__( 'Number of inner blocks must be less than or equal to %1$s but is %2$s.', 'alley' ),
+			'%count%',
+			'%value%',
+		);
+
+		$ngte = sprintf(
+			/* translators: 1: expected count placeholder, 2: actual count placeholder */
+			__( 'Number of inner blocks must be greater than or equal to %1$s but is %2$s.', 'alley' ),
+			'%count%',
+			'%value%',
+		);
+
+		$this->messageTemplates = [
+			'not_equal'                    => $neq,
+			'not_identical'                => $neq,
+			'is_equal'                     => $ieq,
+			'is_identical'                 => $ieq,
+			'not_less_than'                => $nlt,
+			'not_greater_than'             => $ngt,
+			'not_less_than_or_equal_to'    => $nlte,
+			'not_greater_than_or_equal_to' => $ngte,
+			'default'                      => __( 'Invalid number of inner blocks.', 'alley' ),
+		];
 	}
 }
