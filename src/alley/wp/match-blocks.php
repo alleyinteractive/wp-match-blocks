@@ -18,6 +18,7 @@ use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
 use Alley\WP\Validator\Block_InnerBlocks_Count;
 use Alley\WP\Validator\Nonempty_Block;
+use Laminas\Validator\Callback;
 
 /**
  * Match blocks within the given content.
@@ -28,6 +29,9 @@ use Alley\WP\Validator\Nonempty_Block;
  * @param array                                                    $args   {
  *    Optional. Array of arguments for matching which blocks to return. The defaults match all non-empty blocks.
  *
+ *    @type string|array              $ancestor_of       Given a block name, match blocks that have inner blocks, at any depth, with that name.
+ *                                                       Given a fully formed set of `match_blocks()` parameters, match blocks that have inner
+ *                                                       blocks, at any depth, that match the parameters.
  *    @type array                     $attrs             {
  *        Match blocks with the given attributes.
  *
@@ -51,7 +55,7 @@ use Alley\WP\Validator\Nonempty_Block;
  *                                                       criteria, and count each towards totals. Default false.
  *    @type int                       $limit             Extract at most this many blocks. Default `-1`, or no limit.
  *    @type int|int[]|string|string[] $nth_of_type       {
- *        Extract blocks based on their position in the set of found blocks.
+ *        Match blocks based on their position in the set of found blocks.
  *
  *        @type string                    $relation Optional. The keyword used to join 'An+B' selectors if more than one is passed.
  *                                                  Accepts 'AND', or 'OR'. Default 'AND'. Integer arrays are always joined with 'OR'.
@@ -72,6 +76,7 @@ function match_blocks( $source, $args = [] ) {
 	$args = wp_parse_args(
 		$args,
 		[
+			'ancestor_of'       => [],
 			'attrs'             => [],
 			'count'             => false,
 			'flatten'           => false,
@@ -128,6 +133,28 @@ function match_blocks( $source, $args = [] ) {
 
 		if ( $args['skip_empty_blocks'] ) {
 			$validator->attach( new Nonempty_Block() );
+		}
+
+		if ( $args['ancestor_of'] ) {
+			if ( \is_string( $args['ancestor_of'] ) ) {
+				$args['ancestor_of'] = [
+					'name' => $args['ancestor_of'],
+				];
+			}
+
+			if ( \is_array( $args['ancestor_of'] ) && ! wp_is_numeric_array( $args['ancestor_of'] ) ) {
+				$ancestor_args = $args['ancestor_of'];
+				// Find blocks at any depth.
+				$ancestor_args['flatten'] = true;
+				// Only need the number.
+				$ancestor_args['count'] = true;
+
+				$validator->attach(
+					new Callback(
+						fn ( $block ) => match_blocks( $block, $ancestor_args ) > 0,
+					),
+				);
+			}
 		}
 
 		if ( '' !== $args['name'] ) {

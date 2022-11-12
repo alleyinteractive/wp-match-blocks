@@ -10,6 +10,7 @@ Blocks can be matched by:
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
 * Whether the block has inner blocks (`has_innerblocks`)
+* Matching inner blocks (`ancestor_of`)
 
 Passing matching parameters is optional; all non-empty blocks match by default.
 
@@ -206,6 +207,41 @@ $blocks = \Alley\WP\match_blocks(
     [
         'name'           => 'core/list',
         'with_innerhtml' => '<li',
+    ]
+);
+```
+
+Get any block with a nested image:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'ancestor_of' => 'core/image',
+    ]
+);
+```
+
+Get any group that contains a YouTube video:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'name'        => 'core/group',
+        'ancestor_of' => [
+            'name' => 'core/embed',
+            'attrs' => [
+                [
+                    'key'   => 'providerNameSlug'
+                    'value' => 'youtube',
+                ],
+            ],
+        ],
     ]
 );
 ```
