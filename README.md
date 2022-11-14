@@ -359,7 +359,7 @@ The following options are supported for `Alley\WP\Validator\Block_Attribute`:
 
 - `key`: The name of a block attribute, or an array of names, or a regular expression pattern. Default none.
 - `value`: A block attribute value, or an array of values, or regular expression pattern. Default none.
-- `operator`: The operator with which to compare `$value` to block attributes. Accepts `CONTAINS`, `NOT CONTAINS`, `IN`, `NOT IN`, `LIKE`, `NOT LIKE`, `REGEX`, `NOT REGEX`, or any operator supported by `\Alley\Validator\Comparison` (see `\Alley\Validator\ValidatorByOperator`). Default is `===`.
+- `operator`: The operator with which to compare `$value` to block attributes. Accepts `CONTAINS`, `NOT CONTAINS` (case-sensitive), `IN`, `NOT IN`, `LIKE`, `NOT LIKE` (case-insensitive), `REGEX`, `NOT REGEX`, or any operator supported by `\Alley\Validator\Comparison`. Default is `===`.
 - `key_operator`: Equivalent to `operator` but for `$key`.
 
 #### Basic usage
@@ -410,7 +410,7 @@ $valid = new Alley\WP\Validator\Block_Attribute(
 The following options are supported for `Alley\WP\Validator\Block_InnerHTML`:
 
 - `content`: The content to find or a regular expression pattern.
-- `operator`: The operator with which to compare `$content` to the block inner HTML. Accepts `CONTAINS`, `NOT CONTAINS`, `IN`, `NOT IN`, `LIKE`, `NOT LIKE`, `REGEX`, `NOT REGEX`, or any operator supported by `\Alley\Validator\Comparison` (see `\Alley\Validator\ValidatorByOperator`). Default is `LIKE`.
+- `operator`: The operator with which to compare `$content` to the block inner HTML. Accepts `CONTAINS`, `NOT CONTAINS` (case-sensitive), `IN`, `NOT IN`, `LIKE`, `NOT LIKE` (case-insensitive), `REGEX`, `NOT REGEX`, or any operator supported by `\Alley\Validator\Comparison`. Default is `LIKE`.
 
 #### Basic usage
 

@@ -39,8 +39,9 @@ use Alley\WP\Validator\Nonempty_Block;
  *            @type mixed           $value        A block attribute value, or an array of values, or regular
  *                                                expression pattern. Default none.
  *            @type string          $operator     The operator with which to compare `$value` to block attributes.
- *                                                Accepts `IN`, `NOT IN`, `REGEXP`, `NOT REGEXP`, or any operator
- *                                                supported by `Alley\Validator\Comparison`. Default is `===`.
+ *                                                Accepts `CONTAINS`, `NOT CONTAINS` (case-sensitive), `IN`, `NOT IN`,
+ *                                                `LIKE`, `NOT LIKE` (case-insensitive), `REGEX`, `NOT REGEX`, or any
+ *                                                operator supported by `\Alley\Validator\Comparison`. Default `===`.
  *            @type string          $key_operator Equivalent to `$operator` but for `$key`.
  *        }
  *    }
