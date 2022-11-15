@@ -8,7 +8,11 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 - `with_innerhtml` parameter for matching blocks by their inner HTML.
 - `has_innerblocks` parameter for matching blocks by whether they have inner blocks. Includes companion `\Alley\WP\Validator\Block_InnerBlocks_Count` validator.
+- `is_valid` parameter for matching blocks by custom validation logic.
 - `CONTAINS` and `NOT CONTAINS` (case-sensitive), and `LIKE` and `NOT LIKE` (case-insensitive) operators to `attrs` parameter.
+
+### Changed
+
 - Passing a single block instance will return matches within its inner blocks.
 
 ## 1.0.1
