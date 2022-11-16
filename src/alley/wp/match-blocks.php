@@ -12,7 +12,7 @@
 
 namespace Alley\WP;
 
-use Alley\Validator\FastValidatorChain;
+use Alley\Validator\FastFailValidatorChain;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
@@ -122,7 +122,7 @@ function match_blocks( $source, $args = [] ) {
 	}
 
 	try {
-		$validator = new FastValidatorChain( [] );
+		$validator = new FastFailValidatorChain( [] );
 
 		if ( $args['skip_empty_blocks'] ) {
 			$validator->attach( new Nonempty_Block() );
