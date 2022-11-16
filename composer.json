@@ -24,7 +24,7 @@
   },
   "require": {
     "php": "^7.4 || ^8.0",
-    "alleyinteractive/laminas-validator-extensions": "dev-fix/7-missed-messages"
+    "alleyinteractive/laminas-validator-extensions": "dev-main"
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^0.3",
