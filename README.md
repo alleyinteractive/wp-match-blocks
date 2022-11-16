@@ -195,7 +195,7 @@ $images = \Alley\WP\match_blocks(
 );
 ```
 
-Get only lists that contain list items:
+Get shortcode blocks with a specific shortcode:
 
 ```php
 <?php
@@ -203,8 +203,8 @@ Get only lists that contain list items:
 $blocks = \Alley\WP\match_blocks(
     $post,
     [
-        'name'           => 'core/list',
-        'with_innerhtml' => '<li',
+        'name'           => 'core/shortcode',
+        'with_innerhtml' => '[bc_video',
     ]
 );
 ```
