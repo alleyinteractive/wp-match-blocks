@@ -9,6 +9,7 @@ Blocks can be matched by:
 * Block inner HTML (`with_innerhtml`)
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
+* Whether the block has inner blocks (`has_innerblocks`)
 
 Passing matching parameters is optional; all non-empty blocks match by default.
 
@@ -337,6 +338,32 @@ $blocks = \Alley\WP\match_blocks(
 );
 ```
 
+Get only blocks with inner blocks:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'has_innerblocks' => true,
+    ]
+);
+```
+
+Get only blocks without inner blocks:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'has_innerblocks' => false,
+    ]
+);
+```
+
 ## Validators
 
 This package provides classes for validating blocks based on the [Laminas Validator](https://docs.laminas.dev/laminas-validator/) framework and [Laminas Validator Extensions](https://github.com/alleyinteractive/laminas-validator-extensions) package, plus a custom base block validation class.
@@ -528,6 +555,59 @@ $valid = new Alley\WP\Validator\Block_Offset(
     ],
 );
 $valid->isValid( $blocks[2] ); // true
+```
+
+### `Block_InnerBlocks_Count`
+
+`Alley\WP\Validator\Block_InnerBlocks_Count` validates whether the number of inner blocks in the given block passes the specified comparison.
+
+The block passes validation if the comparison is true for the count of inner blocks. Inner blocks within inner blocks don't count towards the total.
+
+#### Supported options
+
+The following options are supported for `Alley\WP\Validator\Block_InnerBlocks_Count`:
+
+* `count`: The expected number of inner blocks for the comparison. Default `0`.
+* `operator`: The PHP comparison operator used to compare the input block's inner blocks and `count`.
+
+#### Basic usage
+
+```php
+<?php
+
+$blocks = parse_blocks(
+    <<<HTML
+<!-- wp:foo -->
+    <!-- wp:bar -->
+        <!-- wp:baz /-->
+    <!-- /wp:bar -->
+<!-- /wp:foo -->
+HTML
+);
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 1,
+        'operator' => '===',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 0,
+        'operator' => '>',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
+
+$valid = new \Alley\WP\Validator\Block_InnerBlocks_Count(
+    [
+        'count'    => 42,
+        'operator' => '<=',
+    ]
+);
+$valid->isValid( $blocks[0] ); // true
 ```
 
 ### `Nonempty_Block`
