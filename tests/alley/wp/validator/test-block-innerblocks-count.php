@@ -237,6 +237,7 @@ final class Test_Block_InnerBlocks_Count extends Test_Case {
 			);
 		} catch ( \Exception $exception ) {
 			// Do nothing.
+			unset( $exception );
 		}
 
 		$this->assertFalse( $validator->isValid( $this->block() ) );
