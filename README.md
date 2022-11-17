@@ -567,7 +567,7 @@ The block passes validation if the comparison is true for the count of inner blo
 
 The following options are supported for `Alley\WP\Validator\Block_InnerBlocks_Count`:
 
-* `count`: The expected number of inner blocks for the comparison. Default `0`.
+* `count`: The expected number of inner blocks for the comparison.
 * `operator`: The PHP comparison operator used to compare the input block's inner blocks and `count`.
 
 #### Basic usage
