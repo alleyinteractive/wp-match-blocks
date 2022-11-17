@@ -6,6 +6,7 @@ Blocks can be matched by:
 
 * Block name or names (`name`)
 * Block attributes (`attrs`, `with_attrs`)
+* Block inner HTML (`with_innerhtml`)
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
 
@@ -174,7 +175,7 @@ Get all images credited to the Associated Press:
 ```php
 <?php
 
-$grafs = \Alley\WP\match_blocks(
+$images = \Alley\WP\match_blocks(
     $post,
     [
         'attrs' => [
@@ -190,6 +191,20 @@ $grafs = \Alley\WP\match_blocks(
             'relation' => 'OR',
         ],
         'name'  => 'core/image',
+    ]
+);
+```
+
+Get shortcode blocks with a specific shortcode:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'name'           => 'core/shortcode',
+        'with_innerhtml' => '[bc_video',
     ]
 );
 ```
@@ -383,6 +398,49 @@ $valid = new Alley\WP\Validator\Block_Attribute(
         'key_operator' => 'REGEX',
         'value'        => [ 'audio', 'document' ],
         'operator'     => 'NOT IN',
+    ],
+);
+```
+### `Block_InnerHTML`
+
+`Alley\WP\Validator\Block_InnerHTML` validates whether the block contains, or does not contain, the specified content in its `innerHTML` property. The block passes if it contains an `innerHTML` value that matches the comparison.
+
+#### Supported options
+
+The following options are supported for `Alley\WP\Validator\Block_InnerHTML`:
+
+- `content`: The content to find or a regular expression pattern.
+- `operator`: The operator with which to compare `$content` to the block inner HTML. Accepts `CONTAINS`, `NOT CONTAINS`, `IN`, `NOT IN`, `LIKE`, `NOT LIKE`, `REGEX`, `NOT REGEX`, or any operator supported by `\Alley\Validator\Comparison` (see `\Alley\Validator\ValidatorByOperator`). Default is `LIKE`.
+
+#### Basic usage
+
+```php
+<?php
+
+// '
+// <!-- wp:paragraph -->
+// <p>The goal of this new editor is to make adding rich content to WordPress simple and enjoyable.</p>
+// <!-- /wp:paragraph -->
+// '
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => 'wordpress',
+        'operator' => 'LIKE',
+    ],
+);
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => 'WordPress',
+        'operator' => 'CONTAINS',
+    ],
+);
+
+$valid = new Alley\WP\Validator\Block_InnerHTML(
+    [
+        'content'  => '/^\s*<p>\s*</p>/',
+        'operator' => 'NOT REGEX',
     ],
 );
 ```
