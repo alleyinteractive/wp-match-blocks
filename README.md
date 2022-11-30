@@ -10,6 +10,7 @@ Blocks can be matched by:
 * The block's positive or negative index within the set (`position`)
 * Whether the block represents only space (`skip_empty_blocks`)
 * Whether the block has inner blocks (`has_innerblocks`)
+* Custom validation classes (`is_valid`)
 
 Passing matching parameters is optional; all non-empty blocks match by default.
 
@@ -210,6 +211,30 @@ $blocks = \Alley\WP\match_blocks(
 );
 ```
 
+Audit a post for YouTube embed blocks that reference videos that are no longer accessible.
+
+```php
+<?php
+
+final class YouTube_Video_Exists extends \Alley\WP\Validator\Block_Validator {
+    // ...
+}
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'name'     => 'core/embed',
+        'attrs'    => [
+            [
+                'key'   => 'providerNameSlug',
+                'value' => 'youtube',
+            ],
+        ],
+        'is_valid' => new \Alley\Validator\Not( new YouTube_Video_Exists(), '…' ),
+    ],
+);
+```
+
 Get the first three blocks:
 
 ```php
@@ -367,6 +392,8 @@ $blocks = \Alley\WP\match_blocks(
 ## Validators
 
 This package provides classes for validating blocks based on the [Laminas Validator](https://docs.laminas.dev/laminas-validator/) framework and [Laminas Validator Extensions](https://github.com/alleyinteractive/laminas-validator-extensions) package, plus a custom base block validation class.
+
+`match_blocks()` also uses these validators internally, and they can be passed as the `is_valid` parameter to `match_blocks()` or used on their own.
 
 ### Base Validator
 
