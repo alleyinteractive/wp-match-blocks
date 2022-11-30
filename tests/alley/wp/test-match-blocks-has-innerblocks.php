@@ -57,17 +57,18 @@ final class Test_Match_Blocks_Has_InnerBlocks extends Test_Case {
 	}
 
 	/**
-	 * Blocks without inner blocks should be matched.
+	 * Only the block without inner blocks should be matched.
 	 */
 	public function test_has_no_innerblocks() {
-		$this->assertCount(
-			0,
-			match_blocks(
-				static::BLOCKS,
-				[
-					'has_innerblocks' => false,
-				]
-			)
+		$actual = match_blocks(
+			static::BLOCKS,
+			[
+				'flatten'         => true,
+				'has_innerblocks' => false,
+			]
 		);
+
+		$this->assertCount( 1, $actual );
+		$this->assertSame( 'core/baz', $actual[0]['blockName'] );
 	}
 }
