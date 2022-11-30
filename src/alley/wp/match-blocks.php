@@ -12,11 +12,11 @@
 
 namespace Alley\WP;
 
+use Alley\Validator\FastFailValidatorChain;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
 use Alley\WP\Validator\Nonempty_Block;
-use Laminas\Validator\ValidatorChain;
 
 /**
  * Match blocks within the given content.
@@ -39,8 +39,9 @@ use Laminas\Validator\ValidatorChain;
  *            @type mixed           $value        A block attribute value, or an array of values, or regular
  *                                                expression pattern. Default none.
  *            @type string          $operator     The operator with which to compare `$value` to block attributes.
- *                                                Accepts `IN`, `NOT IN`, `REGEXP`, `NOT REGEXP`, or any operator
- *                                                supported by `Alley\Validator\Comparison`. Default is `===`.
+ *                                                Accepts `CONTAINS`, `NOT CONTAINS` (case-sensitive), `IN`, `NOT IN`,
+ *                                                `LIKE`, `NOT LIKE` (case-insensitive), `REGEX`, `NOT REGEX`, or any
+ *                                                operator supported by `\Alley\Validator\Comparison`. Default `===`.
  *            @type string          $key_operator Equivalent to `$operator` but for `$key`.
  *        }
  *    }
@@ -121,13 +122,10 @@ function match_blocks( $source, $args = [] ) {
 	}
 
 	try {
-		$validator = new ValidatorChain();
+		$validator = new FastFailValidatorChain( [] );
 
 		if ( $args['skip_empty_blocks'] ) {
-			$validator->attach(
-				new Nonempty_Block(),
-				true,
-			);
+			$validator->attach( new Nonempty_Block() );
 		}
 
 		if ( '' !== $args['name'] ) {
@@ -137,7 +135,6 @@ function match_blocks( $source, $args = [] ) {
 						'name' => $args['name'],
 					],
 				),
-				true,
 			);
 		}
 
@@ -150,7 +147,6 @@ function match_blocks( $source, $args = [] ) {
 						'skip_empty_blocks' => $args['skip_empty_blocks'],
 					],
 				),
-				true,
 			);
 		}
 
@@ -170,7 +166,6 @@ function match_blocks( $source, $args = [] ) {
 		if ( $args['attrs'] && \is_array( $args['attrs'] ) ) {
 			$validator->attach(
 				Internals\parse_attrs_clauses( $args['attrs'] ),
-				true,
 			);
 		}
 
@@ -182,7 +177,6 @@ function match_blocks( $source, $args = [] ) {
 						'operator' => 'LIKE',
 					],
 				),
-				true,
 			);
 		}
 	} catch ( \Exception $exception ) {
