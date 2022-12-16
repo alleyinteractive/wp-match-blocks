@@ -2,7 +2,7 @@
 /**
  * Class file for Test_Block_Name
  *
- * (c) Alley <info@alley.co>
+ * (c) Alley <info@alley.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.

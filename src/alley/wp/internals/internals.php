@@ -2,7 +2,7 @@
 /**
  * Internal functions. These functions are not subject to semantic-versioning constraints
  *
- * (c) Alley <info@alley.co>
+ * (c) Alley <info@alley.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
