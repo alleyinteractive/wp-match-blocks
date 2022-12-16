@@ -12,7 +12,7 @@
 
 namespace Alley\WP\Validator;
 
-use Alley\Validator\BaseValidator;
+use Alley\Validator\ExtendedAbstractValidator;
 use Laminas\Validator\Exception\InvalidArgumentException;
 use WP_Block;
 use WP_Block_Parser_Block;
@@ -20,7 +20,7 @@ use WP_Block_Parser_Block;
 /**
  * Abstract class for validating WordPress blocks.
  */
-abstract class Block_Validator extends BaseValidator {
+abstract class Block_Validator extends ExtendedAbstractValidator {
 	/**
 	 * Properties that need to be in the submitted block to convert it into a parsed block.
 	 *
