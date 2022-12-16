@@ -15,6 +15,10 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 - Passing a single block instance will return matches within its inner blocks.
 
+### Removed
+
+- PHP 7.4 support.
+
 ## 1.0.1
 
 ### Fixed
