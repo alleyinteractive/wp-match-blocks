@@ -6,7 +6,7 @@
   "authors": [
     {
       "name": "Alley",
-      "email": "info@alley.co"
+      "email": "info@alley.com"
     }
   ],
   "autoload": {
@@ -23,13 +23,13 @@
     "lock": false
   },
   "require": {
-    "php": "^7.4 || ^8.0",
-    "alleyinteractive/laminas-validator-extensions": "dev-main"
+    "php": "^8.0",
+    "alleyinteractive/laminas-validator-extensions": "^2.0.0"
   },
   "require-dev": {
-    "alleyinteractive/alley-coding-standards": "^0.3",
+    "alleyinteractive/alley-coding-standards": "^1.0.0",
     "friendsofphp/php-cs-fixer": "^3.8",
-    "mantle-framework/testkit": "^0.5"
+    "mantle-framework/testkit": "^0.9"
   },
   "scripts": {
     "fixer": "php-cs-fixer -v fix --allow-risky=yes",
