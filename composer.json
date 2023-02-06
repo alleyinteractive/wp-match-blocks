@@ -24,6 +24,7 @@
   },
   "require": {
     "php": "^8.0",
+    "alleyinteractive/composer-wordpress-autoloader": "^1.0.0",
     "alleyinteractive/laminas-validator-extensions": "^2.0.0"
   },
   "require-dev": {

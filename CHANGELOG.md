@@ -6,6 +6,12 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
+## 2.0.1
+
+### Fixed
+
+- Missing `alleyinteractive/composer-wordpress-autoloader` dependency.
+
 ## 2.0.0
 
 ### Added
