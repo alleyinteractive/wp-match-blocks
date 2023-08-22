@@ -29,6 +29,16 @@ final class Test_Nonempty_Block extends Test_Case {
 	}
 
 	/**
+	 * Test that "Classic" blocks are not considered empty.
+	 */
+	public function test_classic_block() {
+		$blocks    = parse_blocks( '<p>Hello, world!</p>' );
+		$validator = new Nonempty_Block();
+
+		$this->assertTrue( $validator->isValid( $blocks[0] ) );
+	}
+
+	/**
 	 * Test that invalid input is marked as invalid.
 	 */
 	public function test_invalid_input() {

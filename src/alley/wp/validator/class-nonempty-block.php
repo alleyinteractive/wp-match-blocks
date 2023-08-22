@@ -12,6 +12,8 @@
 
 namespace Alley\WP\Validator;
 
+use Alley\Validator\AnyValidator;
+use Alley\Validator\Not;
 use Laminas\Validator\ValidatorInterface;
 use Traversable;
 use WP_Block_Parser_Block;
@@ -37,11 +39,11 @@ final class Nonempty_Block extends Block_Validator {
 	];
 
 	/**
-	 * Validates the input block name.
+	 * Validates the input block.
 	 *
 	 * @var ValidatorInterface
 	 */
-	private ValidatorInterface $name_validator;
+	private ValidatorInterface $nonempty_tests;
 
 	/**
 	 * Set up.
@@ -51,9 +53,22 @@ final class Nonempty_Block extends Block_Validator {
 	public function __construct( $options = null ) {
 		$this->messageTemplates[ self::EMPTY_BLOCK ] = __( 'Block is empty.', 'alley' );
 
-		$this->name_validator = new Block_Name(
+		$this->nonempty_tests = new AnyValidator(
 			[
-				'name' => null,
+				new Not(
+					new Block_Name(
+						[
+							'name' => null,
+						],
+					),
+					__( 'Block name is null.', 'alley' ),
+				),
+				new Block_InnerHTML(
+					[
+						'operator' => 'REGEX',
+						'content'  => '#\S#',
+					],
+				),
 			],
 		);
 
@@ -66,7 +81,7 @@ final class Nonempty_Block extends Block_Validator {
 	 * @param WP_Block_Parser_Block $block The block to test.
 	 */
 	protected function test_block( WP_Block_Parser_Block $block ): void {
-		if ( $this->name_validator->isValid( $block ) ) {
+		if ( ! $this->nonempty_tests->isValid( $block ) ) {
 			$this->error( self::EMPTY_BLOCK );
 		}
 	}

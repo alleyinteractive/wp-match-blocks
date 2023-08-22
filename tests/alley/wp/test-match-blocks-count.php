@@ -31,7 +31,30 @@ final class Test_Match_Blocks_Count extends Test_Case {
 			\count( $blocks ),
 			match_blocks(
 				implode( '', $blocks ),
-				[ 'count' => true ]
+				[
+					'count' => true,
+				],
+			)
+		);
+	}
+
+	/**
+	 * `count` should be non-zero when there are classic blocks.
+	 */
+	public function test_classic_blocks_count() {
+		$blocks = [
+			'<!-- wp:foo /-->',
+			'bar',
+			'<!-- wp:baz /-->',
+		];
+
+		$this->assertSame(
+			\count( $blocks ),
+			match_blocks(
+				implode( '', $blocks ),
+				[
+					'count' => true,
+				],
 			)
 		);
 	}
@@ -43,8 +66,10 @@ final class Test_Match_Blocks_Count extends Test_Case {
 		$this->assertSame(
 			0,
 			match_blocks(
-				'lorem ipsum dolor',
-				[ 'count' => true ]
+				"\n\n",
+				[
+					'count' => true,
+				],
 			)
 		);
 	}

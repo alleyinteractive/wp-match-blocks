@@ -6,6 +6,12 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
+## 3.0.0
+
+### Changed
+
+* "Classic" blocks, which have inner HTML but no block name, are no longer considered empty.
+
 ## 2.0.1
 
 ### Fixed
