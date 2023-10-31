@@ -70,20 +70,6 @@ final class Block_Offset extends Block_Validator {
 	private array $final_blocks = [];
 
 	/**
-	 * Validates whether blocks are empty.
-	 *
-	 * @var ValidatorInterface
-	 */
-	private ValidatorInterface $nonempty_validator;
-
-	/**
-	 * Validates whether blocks are iterable.
-	 *
-	 * @var ValidatorInterface
-	 */
-	private ValidatorInterface $iterable_validator;
-
-	/**
 	 * Set up.
 	 *
 	 * @param array|Traversable $options Validator options.
@@ -93,13 +79,6 @@ final class Block_Offset extends Block_Validator {
 			/* translators: %s: offset placeholder */
 			__( 'Must be at offset %s within the blocks.', 'alley' ),
 			'%offset%'
-		);
-
-		$this->nonempty_validator = new Nonempty_Block();
-		$this->iterable_validator = new Type(
-			[
-				'type' => 'iterable',
-			],
 		);
 
 		parent::__construct( $options );
@@ -117,7 +96,7 @@ final class Block_Offset extends Block_Validator {
 		$this->final_blocks = $this->options['blocks'];
 
 		if ( $this->options['skip_empty_blocks'] ) {
-			$this->final_blocks = array_filter( $this->final_blocks, [ $this->nonempty_validator, 'isValid' ] );
+			$this->final_blocks = array_filter( $this->final_blocks, [ new Nonempty_Block(), 'isValid' ] );
 		}
 
 		return $this;
@@ -157,10 +136,8 @@ final class Block_Offset extends Block_Validator {
 	 * @param array[]|WP_Block[]|WP_Block_Parser_Block[] $blocks Blocks.
 	 */
 	protected function setBlocks( $blocks ) {
-		$valid = $this->iterable_validator->isValid( $blocks );
-
-		if ( ! $valid ) {
-			throw new InvalidArgumentException( $this->iterable_validator->getMessages()[0] );
+		if ( ! is_iterable( $blocks ) ) {
+			throw new InvalidArgumentException( 'Blocks must be iterable.' );
 		}
 
 		if ( ! $blocks instanceof \Traversable ) {
