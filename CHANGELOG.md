@@ -6,6 +6,12 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
+## 3.1.0
+
+### Changed
+
+* Reduce uses of validators within validators.
+
 ## 3.0.0
 
 ### Changed

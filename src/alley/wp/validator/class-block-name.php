@@ -16,6 +16,7 @@ use Alley\Validator\Comparison;
 use Laminas\Validator\InArray;
 use Laminas\Validator\ValidatorInterface;
 use Traversable;
+use WP_Block;
 use WP_Block_Parser_Block;
 
 /**
@@ -75,20 +76,6 @@ final class Block_Name extends Block_Validator {
 	protected ?string $current_block_name = '';
 
 	/**
-	 * Validates the input block name based on how many names are valid.
-	 *
-	 * @var ValidatorInterface
-	 */
-	private ValidatorInterface $current_validator;
-
-	/**
-	 * Message template to use based on how many names are valid.
-	 *
-	 * @var string
-	 */
-	private string $current_message;
-
-	/**
 	 * Set up.
 	 *
 	 * @param array|Traversable $options Validator options.
@@ -107,14 +94,6 @@ final class Block_Name extends Block_Validator {
 			'%block_name%',
 		);
 
-		$this->current_validator = new Comparison(
-			[
-				'operator' => '===',
-				'compared' => $this->options['name'],
-			]
-		);
-		$this->current_message   = self::NOT_NAMED;
-
 		parent::__construct( $options );
 	}
 
@@ -124,8 +103,16 @@ final class Block_Name extends Block_Validator {
 	 * @param WP_Block_Parser_Block $block The block to test.
 	 */
 	protected function test_block( WP_Block_Parser_Block $block ): void {
-		if ( ! $this->current_validator->isValid( $block->blockName ) ) {
-			$this->error( $this->current_message );
+		$allowed = $this->options['name'];
+		$message = self::NAME_NOT_IN;
+
+		if ( ! \is_array( $allowed ) ) {
+			$allowed = [ $allowed ];
+			$message = self::NOT_NAMED;
+		}
+
+		if ( ! \in_array( $block->blockName, $allowed, true ) ) {
+			$this->error( $message );
 		}
 	}
 
@@ -147,13 +134,5 @@ final class Block_Name extends Block_Validator {
 	 */
 	protected function setName( $name ) {
 		$this->options['name'] = $name;
-
-		$this->current_validator = new InArray(
-			[
-				'haystack' => \is_array( $this->options['name'] ) ? $this->options['name'] : [ $this->options['name'] ],
-				'strict'   => InArray::COMPARE_STRICT,
-			]
-		);
-		$this->current_message   = \is_array( $this->options['name'] ) && \count( $this->options['name'] ) > 1 ? self::NAME_NOT_IN : self::NOT_NAMED;
 	}
 }

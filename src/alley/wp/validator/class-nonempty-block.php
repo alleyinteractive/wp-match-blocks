@@ -39,38 +39,12 @@ final class Nonempty_Block extends Block_Validator {
 	];
 
 	/**
-	 * Validates the input block.
-	 *
-	 * @var ValidatorInterface
-	 */
-	private ValidatorInterface $nonempty_tests;
-
-	/**
 	 * Set up.
 	 *
 	 * @param array|Traversable $options Validator options.
 	 */
 	public function __construct( $options = null ) {
 		$this->messageTemplates[ self::EMPTY_BLOCK ] = __( 'Block is empty.', 'alley' );
-
-		$this->nonempty_tests = new AnyValidator(
-			[
-				new Not(
-					new Block_Name(
-						[
-							'name' => null,
-						],
-					),
-					__( 'Block name is null.', 'alley' ),
-				),
-				new Block_InnerHTML(
-					[
-						'operator' => 'REGEX',
-						'content'  => '#\S#',
-					],
-				),
-			],
-		);
 
 		parent::__construct( $options );
 	}
@@ -81,7 +55,7 @@ final class Nonempty_Block extends Block_Validator {
 	 * @param WP_Block_Parser_Block $block The block to test.
 	 */
 	protected function test_block( WP_Block_Parser_Block $block ): void {
-		if ( ! $this->nonempty_tests->isValid( $block ) ) {
+		if ( null === $block->blockName && preg_match( '#\S#', $block->innerHTML ) === 0 ) {
 			$this->error( self::EMPTY_BLOCK );
 		}
 	}
