@@ -29,7 +29,7 @@ Additionally:
 Install the latest version with:
 
 ```bash
-$ composer require alleyinteractive/wp-match-blocks
+composer require alleyinteractive/wp-match-blocks
 ```
 
 ## Basic usage

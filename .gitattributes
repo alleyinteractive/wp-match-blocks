@@ -2,15 +2,16 @@
 # Exclude these files from release archives.
 #
 # This will also make the files unavailable when using Composer with `--prefer-dist`.
-# If you develop using Composer, use `--prefer-source`.
 #
 # Via WPCS.
 #
 /.github export-ignore
-/.php-cs-fixer.dist.php export-ignore
-/phpcs.xml export-ignore
+/.phpcs.xml export-ignore
+/.phpcs export-ignore
 /phpunit.xml export-ignore
 /tests export-ignore
+/configure.php export-ignore
+/Makefile export-ignore
 
 #
 # Auto detect text files and perform LF normalization.
