@@ -11,8 +11,11 @@
   ],
   "require": {
     "php": "^8.2",
-    "alleyinteractive/composer-wordpress-autoloader": "^1.0.0",
-    "alleyinteractive/laminas-validator-extensions": "^2.0.0"
+    "ext-simplexml": "*",
+    "alleyinteractive/composer-wordpress-autoloader": "^1.0",
+    "alleyinteractive/laminas-validator-extensions": "^2.0",
+    "alleyinteractive/wp-type-extensions": "dev-fix/match-blocks",
+    "symfony/serializer": "^7.2"
   },
   "require-dev": {
     "alleyinteractive/alley-coding-standards": "^2.0",
