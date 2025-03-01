@@ -48,17 +48,19 @@ final class Blocks_Normalizer implements NormalizerInterface {
 	 * @throws LogicException             Occurs when the normalizer is not called in an expected context.
 	 * @throws ExceptionInterface         Occurs for all the other cases of errors.
 	 *
+	 * @phpstan-param array<mixed> $context
+	 * @phpstan-return array{block?: Parsed_Block[]}
+	 *
 	 * @param mixed       $object  Object to normalize.
 	 * @param string|null $format  Format the normalization result will be encoded as.
 	 * @param array       $context Context options for the normalizer.
-	 * @return array|string|int|float|bool|\ArrayObject|null \ArrayObject is used to make sure an empty object is
-	 *                                                       encoded as an object not an array.
+	 * @return array
 	 */
-	public function normalize(
-		mixed $object,
-		?string $format = null,
-		array $context = [],
-	): array|string|int|float|bool|\ArrayObject|null {
+	public function normalize( mixed $object, ?string $format = null, array $context = [] ): array {
+		if ( ! $object instanceof Serialized_Blocks ) {
+			throw new InvalidArgumentException( 'The object must be an instance of Serialized_Blocks' );
+		}
+
 		$parsed = parse_blocks( $object->serialized_blocks() );
 
 		if ( ! is_array( $parsed ) ) {
@@ -81,6 +83,8 @@ final class Blocks_Normalizer implements NormalizerInterface {
 
 	/**
 	 * Checks whether the given class is supported for normalization by this normalizer.
+	 *
+	 * @phpstan-param array<mixed> $context
 	 *
 	 * @param mixed       $data    Data to normalize.
 	 * @param string|null $format  The format being (de-)serialized from or into.
@@ -105,7 +109,7 @@ final class Blocks_Normalizer implements NormalizerInterface {
 	 * and type "*" to match any types.
 	 *
 	 * @param string|null $format The format being (de-)serialized from or into.
-	 * @return array
+	 * @return bool[]
 	 */
 	public function getSupportedTypes( ?string $format ): array {
 		return [ '*' => true ];

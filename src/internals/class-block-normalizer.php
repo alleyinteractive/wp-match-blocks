@@ -14,6 +14,7 @@ namespace Alley\WP\Internals;
 
 use Alley\WP\Blocks\Blocks;
 use Alley\WP\Blocks\Parsed_Block;
+use Alley\WP\Types\Serialized_Blocks;
 use Alley\WP\Types\Single_Block;
 use Symfony\Component\Serializer\Exception\BadMethodCallException;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
@@ -39,17 +40,19 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 	 * @throws LogicException             Occurs when the normalizer is not called in an expected context.
 	 * @throws ExceptionInterface         Occurs for all the other cases of errors.
 	 *
+	 * @phpstan-param array<mixed> $context
+	 * @phpstan-return array{blockName: ?string, attrs: array<string, mixed>, innerBlocks: Serialized_Blocks, innerHTML: string, origin: string}
+	 *
 	 * @param mixed       $object  Object to normalize.
 	 * @param string|null $format  Format the normalization result will be encoded as.
 	 * @param array       $context Context options for the normalizer.
-	 * @return array|string|int|float|bool|\ArrayObject|null \ArrayObject is used to make sure an empty object is
-	 *                                                       encoded as an object not an array.
+	 * @return array
 	 */
-	public function normalize(
-		mixed $object,
-		?string $format = null,
-		array $context = [],
-	): array|string|int|float|bool|\ArrayObject|null {
+	public function normalize( mixed $object, ?string $format = null, array $context = [] ): array {
+		if ( ! $object instanceof Single_Block ) {
+			throw new InvalidArgumentException( 'The object must implement the Single_Block interface.' );
+		}
+
 		$pb = $object->parsed_block();
 
 		return [
@@ -63,6 +66,8 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 
 	/**
 	 * Checks whether the given class is supported for normalization by this normalizer.
+	 *
+	 * @phpstan-param array<mixed> $context
 	 *
 	 * @param mixed       $data    Data to normalize.
 	 * @param string|null $format  The format being (de-)serialized from or into.
@@ -86,7 +91,7 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 	 * and type "*" to match any types.
 	 *
 	 * @param string|null $format The format being (de-)serialized from or into.
-	 * @return array
+	 * @return bool[]
 	 */
 	public function getSupportedTypes( ?string $format ): array {
 		return [ '*' => true ];
@@ -103,6 +108,8 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 	 * @throws RuntimeException         Occurs if the class cannot be instantiated.
 	 * @throws ExceptionInterface       Occurs for all the other cases of errors.
 	 *
+	 * @phpstan-param array<mixed> $context
+	 *
 	 * @param mixed       $data    Data to restore.
 	 * @param string      $type    The expected class to instantiate.
 	 * @param string|null $format  Format the given data was extracted from.
@@ -110,6 +117,10 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 	 * @return Single_Block
 	 */
 	public function denormalize( mixed $data, string $type, ?string $format = null, array $context = [] ): mixed {
+		if ( ! is_array( $data ) || ! isset( $data['origin'] ) || ! is_string( $data['origin'] ) ) {
+			throw new InvalidArgumentException( 'The origin key must be set and be a string.' );
+		}
+
 		$origin = parse_blocks( $data['origin'] );
 
 		return new Parsed_Block( $origin[0] );
@@ -117,6 +128,8 @@ final class Block_Normalizer implements NormalizerInterface, DenormalizerInterfa
 
 	/**
 	 * Checks whether the given class is supported for denormalization by this normalizer.
+	 *
+	 * @phpstan-param array<mixed> $context
 	 *
 	 * @param mixed       $data    Data to denormalize from.
 	 * @param string      $type    The class to which the data should be denormalized.
