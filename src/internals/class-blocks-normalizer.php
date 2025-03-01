@@ -15,10 +15,7 @@ namespace Alley\WP\Internals;
 use Alley\WP\Blocks\Parsed_Block;
 use Alley\WP\Types\Serialized_Blocks;
 use Alley\WP\Validator\Nonempty_Block;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -42,11 +39,7 @@ final class Blocks_Normalizer implements NormalizerInterface {
 	/**
 	 * Normalizes an object into a set of arrays/scalars.
 	 *
-	 * @throws InvalidArgumentException   Occurs when the object given is not a supported type for the normalizer.
-	 * @throws CircularReferenceException Occurs when the normalizer detects a circular reference when no circular
-	 *                                    reference handler can fix it.
-	 * @throws LogicException             Occurs when the normalizer is not called in an expected context.
-	 * @throws ExceptionInterface         Occurs for all the other cases of errors.
+	 * @throws InvalidArgumentException Occurs when the object given is not a supported type for the normalizer.
 	 *
 	 * @phpstan-param array<mixed> $context
 	 * @phpstan-return array{block?: Parsed_Block[]}
