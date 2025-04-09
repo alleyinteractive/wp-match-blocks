@@ -6,7 +6,13 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
-## 4.1.0
+## 4.2.0
+
+### Removed
+
+- Reverted changes from version 4.1 to avoid conflicts with the Alleyvate plugin.
+
+## 4.1.0 [YANKED]
 
 ### Added
 
