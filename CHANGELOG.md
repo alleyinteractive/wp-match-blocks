@@ -6,6 +6,19 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
+## 4.2.0
+
+### Removed
+
+- Reverted changes from version 4.1 to avoid conflicts with the Alleyvate plugin.
+
+## 4.1.0 [YANKED]
+
+### Added
+
+- `__experimental_xpath` parameter for matching blocks by XPath queries.
+- `Matched_Blocks` implementation of the `Alley\WP\Types\Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
+
 ## 4.0.0
 
 ### Changed
@@ -16,13 +29,13 @@ Nothing yet.
 
 ### Changed
 
-* Reduce uses of validators within validators.
+- Reduce uses of validators within validators.
 
 ## 3.0.0
 
 ### Changed
 
-* "Classic" blocks, which have inner HTML but no block name, are no longer considered empty.
+- "Classic" blocks, which have inner HTML but no block name, are no longer considered empty.
 
 ## 2.0.1
 
