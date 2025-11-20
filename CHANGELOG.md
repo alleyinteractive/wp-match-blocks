@@ -6,7 +6,20 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
-## 4.1.0
+## 4.3.0
+
+### Added
+
+- `__experimental_xpath` parameter for matching blocks by XPath queries.
+- `Matched_Blocks` implementation of the `Alley\WP\Types\Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
+
+## 4.2.0
+
+### Removed
+
+- Reverted changes from version 4.1 to avoid conflicts with the Alleyvate plugin.
+
+## 4.1.0 [YANKED]
 
 ### Added
 
