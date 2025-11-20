@@ -174,9 +174,13 @@ function match_blocks( $source, $args = [] ) {
 			],
 		);
 
-		$xml_content   = $serializer->serialize( Blocks::from_parsed_blocks( $blocks ), 'xml' );
-		$xml_element   = new SimpleXMLElement( $xml_content );
-		$xpath_matches = $xml_element->xpath( $args['__experimental_xpath'] );
+		try {
+			$xml_content   = $serializer->serialize( Blocks::from_parsed_blocks( $blocks ), 'xml' );
+			$xml_element   = new SimpleXMLElement( $xml_content );
+			$xpath_matches = $xml_element->xpath( $args['__experimental_xpath'] );
+		} catch ( \Exception $e ) {
+			return $error;
+		}
 
 		if ( is_array( $xpath_matches ) ) {
 			$blocks = array_map(
