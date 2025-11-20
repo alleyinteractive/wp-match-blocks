@@ -11,6 +11,7 @@ Blocks can be matched by:
 * Whether the block represents only space (`skip_empty_blocks`)
 * Whether the block has inner blocks (`has_innerblocks`)
 * Custom validation classes (`is_valid`)
+* Xpath queries (`__experimental_xpath`) ([huh?](#matching-blocks-with-xpath))
 
 Passing matching parameters is optional; all non-empty blocks match by default.
 
@@ -657,6 +658,206 @@ $blocks = parse_blocks( "\n" );
 $valid = new \Alley\WP\Validator\Nonempty_Block();
 $valid->isValid( $blocks[0] ); // false
 ```
+
+## Matching blocks with XPath
+
+`match_blocks()` has **experimental** support for matching blocks with XPath queries. These are made possible by converting the source blocks to a custom XML structure.
+
+**This feature may be changed without backwards compatibility in future releases.**
+
+### Basic usage
+
+Find all paragraph blocks that are inner blocks of a cover block:
+
+```php
+<?php
+
+$grafs = \Alley\WP\match_blocks(
+    $post,
+    [
+        '__experimental_xpath' => '//block[blockName="core/cover"]/innerBlocks/block[blockName="core/paragraph"]',
+    ],
+);
+```
+
+Find list blocks with zero or one list items:
+
+```php
+<?php
+
+$lists = \Alley\WP\match_blocks(
+    $post,
+    [
+        '__experimental_xpath' => '//block[blockName="core/list" and count(innerBlocks/block[blockName="core/list-item"]) <= 1]',
+    ],
+);
+```
+
+Find the second paragraph block:
+
+```php
+<?php
+
+$graf = \Alley\WP\match_block(
+    $post,
+    [
+        '__experimental_xpath' => '//block[blockName="core/paragraph"][2]',
+    ],
+);
+```
+
+Find full-width images:
+
+```php
+<?php
+
+$images = \Alley\WP\match_blocks(
+    $post,
+    [
+        '__experimental_xpath' => '//block[blockName="core/image"][attrs/sizeSlug="full"]',
+    ],
+);
+```
+
+The XML document currently has the following structure:
+
+```xml
+<blocks>
+  <block>
+    <blockName />
+    <attrs />
+    <innerBlocks />
+    <innerHTML />
+  </block>
+</blocks>
+```
+
+For example, this block HTML:
+
+```html
+<!-- wp:paragraph -->
+<p>The Common category includes the following blocks: <em>Paragraph, image, headings, list, gallery, quote, audio, cover, video.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"align":"right"} -->
+<p class="has-text-align-right"><em>This italic paragraph is right aligned.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:image {"id":968,"sizeSlug":"full","className":"is-style-circle-mask"} -->
+<figure class="wp-block-image size-full is-style-circle-mask"><img src="https://example.com/wp-content/uploads/2013/03/image-alignment-150x150-13.jpg" alt="Image Alignment 150x150" class="wp-image-968"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:cover {"url":"https://example.com/wp-content/uploads/2008/06/dsc04563-12.jpg","id":759,"minHeight":274} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url(https://example.com/wp-content/uploads/2008/06/dsc04563-12.jpg);min-height:274px">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…","fontSize":"large"} -->
+    <p class="has-text-align-center has-large-font-size">Cover block with background image</p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+```
+
+will be converted to this XML:
+
+```xml
+<blocks>
+  <block>
+    <blockName>core/paragraph</blockName>
+    <attrs/>
+    <innerBlocks/>
+    <innerHTML><![CDATA[
+<p>The Common category includes the following blocks: <em>Paragraph, image, headings, list, gallery, quote, audio, cover, video.</em></p>
+]]></innerHTML>
+  </block>
+
+  <block>
+    <blockName>core/paragraph</blockName>
+    <attrs>
+      <align>right</align>
+    </attrs>
+    <innerBlocks/>
+    <innerHTML><![CDATA[
+<p class="has-text-align-right"><em>This italic paragraph is right aligned.</em></p>
+]]></innerHTML>
+  </block>
+
+  <block>
+    <blockName>core/image</blockName>
+    <attrs>
+      <id>968</id>
+      <sizeSlug>full</sizeSlug>
+      <className>is-style-circle-mask</className>
+    </attrs>
+    <innerBlocks/>
+    <innerHTML><![CDATA[
+<figure class="wp-block-image size-full is-style-circle-mask"><img src="https://example.com/wp-content/uploads/2013/03/image-alignment-150x150-13.jpg" alt="Image Alignment 150x150" class="wp-image-968"/></figure>
+]]></innerHTML>
+  </block>
+
+  <block>
+    <blockName>core/cover</blockName>
+    <attrs>
+      <url>https://example.com/wp-content/uploads/2008/06/dsc04563-12.jpg</url>
+      <id>759</id>
+      <minHeight>274</minHeight>
+    </attrs>
+    <innerBlocks>
+      <block>
+        <blockName>core/paragraph</blockName>
+        <attrs>
+          <align>center</align>
+          <placeholder>Write title&#x2026;</placeholder>
+          <fontSize>large</fontSize>
+        </attrs>
+        <innerBlocks/>
+        <innerHTML><![CDATA[
+    <p class="has-text-align-center has-large-font-size">Cover block with background image</p>
+    ]]></innerHTML>
+      </block>
+    </innerBlocks>
+    <innerHTML><![CDATA[
+<div class="wp-block-cover has-background-dim" style="background-image:url(https://example.com/wp-content/uploads/2008/06/dsc04563-12.jpg);min-height:274px">
+  <div class="wp-block-cover__inner-container">
+
+  </div>
+</div>
+]]></innerHTML>
+  </block>
+</blocks>
+```
+
+### Limitations
+
+Although it's possible to use XPath queries in conjunction with other `match_blocks()` arguments, the results with some arguments might be unexpected.
+
+Typically, `match_blocks()` returns the blocks that match all the arguments. But when the `__experimental_xpath` argument is used, the set of source blocks will be first reduced to the blocks that match the XPath query, and then the remaining arguments will be applied.
+
+For example, compare these sets of arguments:
+
+```php
+<?php
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        'name'     => 'core/paragraph',
+        'position' => 3,
+    ],
+);
+
+$blocks = \Alley\WP\match_blocks(
+    $post,
+    [
+        '__experimental_xpath' => '//block[blockName="core/paragraph"]',
+        'position'             => 3,
+    ],
+);
+```
+
+In the top example, the third block in the set of blocks will be returned, but only if it's a paragraph.
+
+In the bottom example, the XPath query will match all paragraphs in the document, regardless of their depth, and then the third paragraph out of that set will be returned.
 
 ## About
 
