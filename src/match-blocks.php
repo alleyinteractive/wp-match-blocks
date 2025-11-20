@@ -13,6 +13,7 @@
 namespace Alley\WP;
 
 use Alley\Validator\FastFailValidatorChain;
+use Alley\WP\Blocks\Named_Block;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
@@ -146,39 +147,35 @@ function match_blocks( $source, $args = [] ) {
 		return $error;
 	}
 
-	if ( $args['flatten'] ) {
-		$blocks = Internals\flatten_blocks( $blocks );
-	}
-
-	try {
-		$validator = new FastFailValidatorChain( [] );
-
-		if ( $args['skip_empty_blocks'] ) {
-			$validator->attach( new Nonempty_Block() );
-		}
-
-		if ( '' !== $args['name'] ) {
-			$validator->attach(
-				new Block_Name(
-					[
-						'name' => $args['name'],
-					],
-				),
-			);
-		}
-
-		if ( null !== $args['position'] ) {
-			$validator->attach(
-				new Block_Offset(
-					[
-						'blocks'            => $blocks,
-						'offset'            => $args['position'],
-						'skip_empty_blocks' => $args['skip_empty_blocks'],
-					],
-				),
-			);
-		}
-
+//	try {
+//		$validator = new FastFailValidatorChain( [] );
+//
+//		if ( $args['skip_empty_blocks'] ) {
+//			$validator->attach( new Nonempty_Block() );
+//		}
+//
+//		if ( '' !== $args['name'] ) {
+//			$validator->attach(
+//				new Block_Name(
+//					[
+//						'name' => $args['name'],
+//					],
+//				),
+//			);
+//		}
+//
+//		if ( null !== $args['position'] ) {
+//			$validator->attach(
+//				new Block_Offset(
+//					[
+//						'blocks'            => $blocks,
+//						'offset'            => $args['position'],
+//						'skip_empty_blocks' => $args['skip_empty_blocks'],
+//					],
+//				),
+//			);
+//		}
+//
 		if ( $args['with_attrs'] ) {
 			$args['attrs'] = [
 				'relation' => 'AND',
@@ -191,44 +188,133 @@ function match_blocks( $source, $args = [] ) {
 				$args['attrs'],
 			];
 		}
-
-		if ( $args['attrs'] && \is_array( $args['attrs'] ) ) {
-			$validator->attach(
-				Internals\parse_attrs_clauses( $args['attrs'] ),
-			);
-		}
-
-		if ( \is_string( $args['with_innerhtml'] ) || $args['with_innerhtml'] instanceof \Stringable ) {
-			$validator->attach(
-				new Block_InnerHTML(
-					[
-						'content'  => $args['with_innerhtml'],
-						'operator' => 'LIKE',
-					],
-				),
-			);
-		}
-
-		if ( null !== $args['has_innerblocks'] ) {
-			$validator->attach(
-				new Block_InnerBlocks_Count(
-					[
-						'count'    => 0,
-						'operator' => $args['has_innerblocks'] ? '>' : '===',
-					],
-				),
-			);
-		}
-
-		if ( $args['is_valid'] instanceof ValidatorInterface ) {
-			$validator->attach( $args['is_valid'] );
-		}
-	} catch ( \Exception $exception ) {
-		return $error;
-	}
+//
+//		if ( $args['attrs'] && \is_array( $args['attrs'] ) ) {
+//			$validator->attach(
+//				Internals\parse_attrs_clauses( $args['attrs'] ),
+//			);
+//		}
+//
+//		if ( \is_string( $args['with_innerhtml'] ) || $args['with_innerhtml'] instanceof \Stringable ) {
+//			$validator->attach(
+//				new Block_InnerHTML(
+//					[
+//						'content'  => $args['with_innerhtml'],
+//						'operator' => 'LIKE',
+//					],
+//				),
+//			);
+//		}
+//
+//		if ( null !== $args['has_innerblocks'] ) {
+//			$validator->attach(
+//				new Block_InnerBlocks_Count(
+//					[
+//						'count'    => 0,
+//						'operator' => $args['has_innerblocks'] ? '>' : '===',
+//					],
+//				),
+//			);
+//		}
+//
+//		if ( $args['is_valid'] instanceof ValidatorInterface ) {
+//			$validator->attach( $args['is_valid'] );
+//		}
+//	} catch ( \Exception $exception ) {
+//		return $error;
+//	}
 
 	// Reduce to matching indices.
-	$matches = array_map( [ $validator, 'isValid' ], $blocks );
+//	$matches = $blocks;
+//	$matches = array_map( [ $validator, 'isValid' ], $blocks );
+//	$matches = [];
+
+	$proc              = new \WP_Block_Processor( serialize_blocks( $blocks ) );
+	$top_level_results = [];
+	$stream_results    = [];
+
+	$attrs = $args['attrs'] && is_array( $args['attrs'] )
+		? Internals\parse_attrs_clauses( $args['attrs'] )
+		: null;
+	$inner_html = is_string( $args['with_innerhtml'] ) || $args['with_innerhtml'] instanceof \Stringable
+		? new Block_InnerHTML(
+			[
+				'content'  => $args['with_innerhtml'],
+				'operator' => 'LIKE',
+			],
+		)
+		: null;
+
+	for ( $cursor = 0; $proc->next_block( $args['skip_empty_blocks'] ? null : '*' ) !== false; $cursor++ ) {
+		$result = true;
+
+		$depth = $proc->get_depth();
+
+		if ( $depth > 1 && ! $args['flatten'] ) {
+			$result = false;
+		}
+
+		if ( $result === true ) {
+			if ( '' !== $args['name'] ) {
+				$allowed = is_array( $args['name'] ) ? $args['name'] : [ $args['name'] ];
+
+				if ( ! in_array( $proc->get_block_type(), $allowed, true ) ) {
+					$result = false;
+				}
+			}
+
+			if ( $attrs instanceof ValidatorInterface ) {
+				$block = new \WP_Block_Parser_Block(
+					$proc->get_block_type(),
+					$proc->allocate_and_return_parsed_attributes(),
+					[],
+					'',
+					[],
+				);
+
+				if ( ! $attrs->isValid( $block ) ) {
+					$result = false;
+				}
+			}
+
+			if ( $inner_html instanceof ValidatorInterface ) {
+//				if ( ! $inner_html->isValid( $proc->extract_block() ) ) {
+//					$result = false;
+//				}
+			}
+		}
+
+		$stream_results[ $cursor ] = $result;
+
+		if ( $depth === 1 ) {
+			$top_level_results[ $cursor ] = $result;
+		}
+	}
+
+	$matches = $args['flatten'] ? $stream_results : $top_level_results;
+
+	if ( null !== $args['position'] ) {
+		$allowed = is_array( $args['position'] ) ? $args['position'] : [ $args['position'] ];
+
+		foreach ( $matches as $index => $match ) {
+			$position_match = false;
+
+			foreach ( $allowed as $pos ) {
+				$offset = $pos >= 0 ? $pos : count( $blocks ) + $pos;
+
+				if ( $index === $offset ) {
+					$position_match = true;
+					break;
+				}
+			}
+
+			if ( ! $position_match ) {
+				$matches[ $index ] = false;
+			}
+		}
+	}
+
+
 	$matches = array_filter( $matches );
 	$matches = array_keys( $matches );
 
@@ -255,6 +341,10 @@ function match_blocks( $source, $args = [] ) {
 
 	// Flip indices into array keys.
 	$matches = array_flip( $matches );
+
+	if ( $args['flatten'] ) {
+		$blocks = Internals\flatten_blocks( $blocks );
+	}
 
 	// Intersect matching keys with keys in original list of blocks.
 	$matches = array_intersect_key( $blocks, $matches );
