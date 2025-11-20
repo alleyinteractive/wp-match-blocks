@@ -11,7 +11,7 @@ Nothing yet.
 ### Added
 
 - `__experimental_xpath` parameter for matching blocks by XPath queries.
-- `Matched_Blocks` implementation of the `Alley\WP\Types\Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
+- `Matched_Blocks` implementation of the `Alley\WP\Types\Serialized_Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
 
 ## 4.2.0
 
@@ -24,7 +24,7 @@ Nothing yet.
 ### Added
 
 - `__experimental_xpath` parameter for matching blocks by XPath queries.
-- `Matched_Blocks` implementation of the `Alley\WP\Types\Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
+- `Matched_Blocks` implementation of the `Alley\WP\Types\Serialized_Blocks` interface from the [Type Extensions](https://github.com/alleyinteractive/wp-type-extensions/) library.
 
 ## 4.0.0
 
