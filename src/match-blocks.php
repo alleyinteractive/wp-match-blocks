@@ -13,12 +13,19 @@
 namespace Alley\WP;
 
 use Alley\Validator\FastFailValidatorChain;
+use Alley\WP\Blocks\Blocks;
+use Alley\WP\Internals\Block_Normalizer;
+use Alley\WP\Internals\Blocks_Normalizer;
+use Alley\WP\Types\Single_Block;
 use Alley\WP\Validator\Block_InnerHTML;
 use Alley\WP\Validator\Block_Name;
 use Alley\WP\Validator\Block_Offset;
 use Alley\WP\Validator\Block_InnerBlocks_Count;
 use Alley\WP\Validator\Nonempty_Block;
 use Laminas\Validator\ValidatorInterface;
+use SimpleXMLElement;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Serializer;
 use WP_Block_Parser_Block;
 use WP_Post;
 
@@ -98,18 +105,19 @@ function match_blocks( $source, $args = [] ) {
 	$args = wp_parse_args(
 		$args,
 		[
-			'attrs'             => [],
-			'count'             => false,
-			'flatten'           => false,
-			'has_innerblocks'   => null,
-			'is_valid'          => null,
-			'limit'             => -1,
-			'name'              => '',
-			'nth_of_type'       => null,
-			'position'          => null,
-			'skip_empty_blocks' => true,
-			'with_attrs'        => [],
-			'with_innerhtml'    => null,
+			'attrs'                => [],
+			'count'                => false,
+			'flatten'              => false,
+			'has_innerblocks'      => null,
+			'is_valid'             => null,
+			'limit'                => -1,
+			'name'                 => '',
+			'nth_of_type'          => null,
+			'position'             => null,
+			'skip_empty_blocks'    => true,
+			'with_attrs'           => [],
+			'with_innerhtml'       => null,
+			'__experimental_xpath' => null,
 		],
 	);
 
@@ -148,6 +156,38 @@ function match_blocks( $source, $args = [] ) {
 
 	if ( $args['flatten'] ) {
 		$blocks = Internals\flatten_blocks( $blocks );
+	}
+
+	if ( \is_string( $args['__experimental_xpath'] ) && strlen( $args['__experimental_xpath'] ) > 0 ) {
+		$serializer = new Serializer(
+			normalizers: [
+				new Block_Normalizer(),
+				new Blocks_Normalizer(),
+			],
+			encoders: [
+				new XmlEncoder(
+					[
+						'cdata_wrapping'     => true,
+						'xml_root_node_name' => 'blocks',
+					],
+				),
+			],
+		);
+
+		try {
+			$xml_content   = $serializer->serialize( Blocks::from_parsed_blocks( $blocks ), 'xml' );
+			$xml_element   = new SimpleXMLElement( $xml_content );
+			$xpath_matches = $xml_element->xpath( $args['__experimental_xpath'] );
+		} catch ( \Exception $e ) {
+			return $error;
+		}
+
+		if ( is_array( $xpath_matches ) ) {
+			$blocks = array_map(
+				fn ( $match ) => $serializer->deserialize( $match->asXML(), Single_Block::class, 'xml' )->parsed_block(),
+				$xpath_matches,
+			);
+		}
 	}
 
 	try {
@@ -236,7 +276,7 @@ function match_blocks( $source, $args = [] ) {
 		// These are 1-based indices. Map them to 0-based.
 		$nth_of_type = Internals\parse_nth_of_type( $args['nth_of_type'], \count( $matches ) );
 		$nth_indices = array_map(
-			fn( $nth ) => (int) $nth - 1,
+			fn ( $nth ) => (int) $nth - 1,
 			$nth_of_type
 		);
 
