@@ -39,4 +39,24 @@ HTML,
 
 		$this->assertSame( '<!-- wp:alley/bar /-->', $matched->serialized_blocks() );
 	}
+
+	/**
+	 * Count blocks in the origin instance.
+	 */
+	public function test_count() {
+		$matched = new Matched_Blocks(
+			[
+				'name' => [ 'alley/bar', 'alley/baz' ],
+			],
+			new Block_Content(
+				<<<HTML
+<!-- wp:alley/foo /-->
+<!-- wp:alley/bar /-->
+<!-- wp:alley/baz /-->
+HTML,
+			),
+		);
+
+		$this->assertCount( 2, $matched );
+	}
 }
