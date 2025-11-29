@@ -4,7 +4,9 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 ## Unreleased
 
-Nothing yet.
+### Added
+
+- `Matched_Blocks` now implements the `Countable` interface.
 
 ## 4.3.0
 
