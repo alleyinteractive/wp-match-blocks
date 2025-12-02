@@ -8,13 +8,14 @@
 namespace Alley\WP\Blocks;
 
 use Alley\WP\Types\Serialized_Blocks;
+use Countable;
 
 use function Alley\WP\match_blocks;
 
 /**
  * Blocks matched with {@see match_blocks()}.
  */
-final class Matched_Blocks implements Serialized_Blocks {
+final class Matched_Blocks implements Serialized_Blocks, Countable {
 	/**
 	 * Set up.
 	 *
@@ -35,5 +36,19 @@ final class Matched_Blocks implements Serialized_Blocks {
 		$matched = match_blocks( $this->origin->serialized_blocks(), $this->args );
 
 		return \is_array( $matched ) ? serialize_blocks( $matched ) : ''; // @phpstan-ignore-line argument.type
+	}
+
+	/**
+	 * Count matched blocks.
+	 *
+	 * @return int
+	 */
+	public function count(): int {
+		$args          = $this->args;
+		$args['count'] = true;
+
+		$matched = match_blocks( $this->origin->serialized_blocks(), $args );
+
+		return \is_int( $matched ) ? $matched : 0;
 	}
 }
