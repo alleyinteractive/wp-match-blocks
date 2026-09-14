@@ -29,7 +29,7 @@ class MatchedBlocksTest extends Test_Case {
 				'name' => 'alley/bar',
 			],
 			new Block_Content(
-				<<<HTML
+				<<<'HTML'
 <!-- wp:alley/foo /-->
 <!-- wp:alley/bar /-->
 <!-- wp:alley/baz /-->
@@ -49,7 +49,7 @@ HTML,
 				'name' => [ 'alley/bar', 'alley/baz' ],
 			],
 			new Block_Content(
-				<<<HTML
+				<<<'HTML'
 <!-- wp:alley/foo /-->
 <!-- wp:alley/bar /-->
 <!-- wp:alley/baz /-->
