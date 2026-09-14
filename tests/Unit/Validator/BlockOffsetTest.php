@@ -197,7 +197,7 @@ final class BlockOffsetTest extends Test_Case {
 	 */
 	protected static function blocks() {
 		return parse_blocks(
-			<<<HTML
+			<<<'HTML'
 <!-- wp:paragraph -->
 <p>Headings are separate blocks as well, which helps with the outline and organization of your content.</p>
 <!-- /wp:paragraph -->
