@@ -4,9 +4,14 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 ## Unreleased
 
+Nothing yet.
+
+## 4.4.0
+
 ### Added
 
 - `Matched_Blocks` now implements the `Countable` interface.
+- Support for `alleyinteractive/wp-type-extensions` v5.
 
 ## 4.3.0
 
