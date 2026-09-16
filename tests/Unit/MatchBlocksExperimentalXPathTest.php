@@ -25,7 +25,7 @@ final class MatchBlocksExperimentalXPathTest extends Test_Case {
 	 *
 	 * @var string
 	 */
-	private const BLOCKS = <<<HTML
+	private const BLOCKS = <<<'HTML'
 <!-- wp:paragraph -->
 <p>The Common category includes the following blocks: <em>Paragraph, image, headings, list, gallery, quote, audio, cover, video.</em></p>
 <!-- /wp:paragraph -->

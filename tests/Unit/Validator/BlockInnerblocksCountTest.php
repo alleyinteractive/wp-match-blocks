@@ -257,7 +257,7 @@ final class BlockInnerblocksCountTest extends Test_Case {
 	 */
 	protected static function block() {
 		$blocks = parse_blocks(
-			<<<HTML
+			<<<'HTML'
 <!-- wp:columns -->
 <div class="wp-block-columns">
 	<!-- wp:column -->

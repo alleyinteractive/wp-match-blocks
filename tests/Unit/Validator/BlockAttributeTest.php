@@ -234,7 +234,7 @@ final class BlockAttributeTest extends Test_Case {
 	 */
 	protected static function block() {
 		$blocks = parse_blocks(
-			<<<HTML
+			<<<'HTML'
 <!-- wp:media-text {"mediaId":617,"mediaType":"image","isStackedOnMobile":false,"className":"alignwide"} -->
 HTML
 		);
