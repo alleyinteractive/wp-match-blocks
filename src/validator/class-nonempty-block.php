@@ -32,9 +32,9 @@ final class Nonempty_Block extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
-	 * @var string[]
+	 * @var array<string, string>
 	 */
-	protected $messageTemplates = [
+	protected array $messageTemplates = [
 		self::EMPTY_BLOCK => '',
 	];
 

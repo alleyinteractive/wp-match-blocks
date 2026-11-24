@@ -14,6 +14,7 @@ namespace Alley\WP\Validator;
 
 use Alley\Validator\ExtendedAbstractValidator;
 use Laminas\Validator\Exception\InvalidArgumentException;
+use Traversable;
 use WP_Block;
 use WP_Block_Parser_Block;
 
@@ -27,6 +28,65 @@ abstract class Block_Validator extends ExtendedAbstractValidator {
 	 * @var string[]
 	 */
 	private const REQUIRED_BLOCK_KEYS = [ 'blockName', 'attrs', 'innerBlocks', 'innerHTML', 'innerContent' ];
+
+	/**
+	 * Options handled by the Laminas constructor rather than by this validator.
+	 *
+	 * @var string[]
+	 */
+	private const LAMINAS_OPTIONS = [ 'messages', 'translator', 'translatorEnabled', 'translatorTextDomain', 'valueObscured' ];
+
+	/**
+	 * Options for this validator.
+	 *
+	 * @var mixed[]
+	 */
+	protected $options = [];
+
+	/**
+	 * Set up.
+	 *
+	 * @phpstan-param array<string, mixed>|Traversable<string, mixed>|null $options
+	 *
+	 * @param array|Traversable|null $options Validator options.
+	 */
+	public function __construct( $options = null ) {
+		if ( $options instanceof Traversable ) {
+			$options = iterator_to_array( $options );
+		}
+
+		if ( ! \is_array( $options ) ) {
+			$options = [];
+		}
+
+		$laminas_options = array_intersect_key( $options, array_flip( self::LAMINAS_OPTIONS ) );
+
+		parent::__construct( $laminas_options ); // @phpstan-ignore argument.type
+
+		$this->setOptions( array_diff_key( $options, $laminas_options ) );
+	}
+
+	/**
+	 * Sets one or multiple options, calling a matching `set*()` method for each option where one exists.
+	 *
+	 * @phpstan-param array<string, mixed>|Traversable<string, mixed> $options
+	 *
+	 * @param array|Traversable $options Options to set.
+	 * @return static
+	 */
+	public function setOptions( $options = [] ) {
+		foreach ( $options as $name => $option ) {
+			$setter = 'set' . ucfirst( $name );
+
+			if ( 'setOptions' !== $setter && method_exists( $this, $setter ) ) {
+				$this->{$setter}( $option );
+			} else {
+				$this->options[ $name ] = $option;
+			}
+		}
+
+		return $this;
+	}
 
 	/**
 	 * Apply block validation logic and add any validation errors.
@@ -59,10 +119,24 @@ abstract class Block_Validator extends ExtendedAbstractValidator {
 	 *
 	 * @param array|WP_Block|WP_Block_Parser_Block $value Original block.
 	 */
-	protected function setValue( $value ) {
+	protected function setValue( $value ): void {
 		$value = self::to_parser_block( $value );
 
 		parent::setValue( $value );
+	}
+
+	/**
+	 * Format an option for use in a failure message, rendering lists as "[a, b]".
+	 *
+	 * @param mixed $value Option value.
+	 * @return string
+	 */
+	protected static function message_value( mixed $value ): string {
+		if ( \is_array( $value ) ) {
+			return '[' . implode( ', ', array_map( [ self::class, 'message_value' ], $value ) ) . ']';
+		}
+
+		return \is_scalar( $value ) || null === $value ? (string) $value : get_debug_type( $value );
 	}
 
 	/**

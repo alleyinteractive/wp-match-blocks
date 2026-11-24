@@ -30,9 +30,9 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
-	 * @var string[]
+	 * @var array<string, string>
 	 */
-	protected $messageTemplates = [
+	protected array $messageTemplates = [
 		'not_equal'                    => '',
 		'not_identical'                => '',
 		'is_equal'                     => '',
@@ -48,9 +48,9 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 	/**
 	 * Array of additional variables available for validation failure messages.
 	 *
-	 * @var mixed[]
+	 * @var array<string, string|array<string, string>>
 	 */
-	protected $messageVariables = [
+	protected array $messageVariables = [
 		'count' => [
 			'options' => 'count',
 		],
@@ -86,7 +86,7 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 		$this->valid_comparisons = new Comparison(
 			[
 				'operator' => $this->options['operator'],
-				'compared' => $this->options['count'],
+				'target'   => $this->options['count'],
 			],
 		);
 
@@ -110,7 +110,7 @@ final class Block_InnerBlocks_Count extends Block_Validator {
 			$this->valid_comparisons = new Comparison(
 				[
 					'operator' => $this->options['operator'],
-					'compared' => $this->options['count'],
+					'target'   => $this->options['count'],
 				],
 			);
 		} catch ( \Exception $exception ) {
