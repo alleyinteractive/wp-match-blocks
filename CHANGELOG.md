@@ -6,6 +6,18 @@ This library adheres to [Semantic Versioning](https://semver.org/) and [Keep a C
 
 Nothing yet.
 
+## 5.0.0
+
+### Changed
+
+- Require `alleyinteractive/laminas-validator-extensions` ^3.0 and Laminas Validator 3, which adds PHP 8.6 support.
+- Require `alleyinteractive/wp-type-extensions` ^5.1.
+- The minimum PHP version is now 8.4.
+- Subclasses of `Block_Validator` that declare `$messageTemplates` or `$messageVariables` must type them as `array`, and any `setValue()` override must declare a `void` return type.
+- Laminas Validator Extensions 3 changed several of its own validators, such as renaming the `compared` option of `Comparison` to `target`. Code that uses those validators directly alongside this package should follow [its upgrade notes](https://github.com/alleyinteractive/laminas-validator-extensions/blob/main/CHANGELOG.md#300).
+
+`match_blocks()` and the options accepted by this package's validators are unchanged, and `setOptions()` remains available on `Block_Validator`.
+
 ## 4.4.0
 
 ### Added

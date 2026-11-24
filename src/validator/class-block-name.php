@@ -40,9 +40,9 @@ final class Block_Name extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
-	 * @var string[]
+	 * @var array<string, string>
 	 */
-	protected $messageTemplates = [
+	protected array $messageTemplates = [
 		self::NOT_NAMED   => '',
 		self::NAME_NOT_IN => '',
 	];
@@ -50,14 +50,19 @@ final class Block_Name extends Block_Validator {
 	/**
 	 * Array of additional variables available for validation failure messages.
 	 *
-	 * @var mixed[]
+	 * @var array<string, string|array<string, string>>
 	 */
-	protected $messageVariables = [
-		'name'       => [
-			'options' => 'name',
-		],
+	protected array $messageVariables = [
+		'name'       => 'name_for_message',
 		'block_name' => 'current_block_name',
 	];
+
+	/**
+	 * The 'name' option, formatted for use in error messages.
+	 *
+	 * @var string
+	 */
+	protected string $name_for_message = '';
 
 	/**
 	 * Options for this validator.
@@ -131,7 +136,7 @@ final class Block_Name extends Block_Validator {
 	 *
 	 * @param array|WP_Block|WP_Block_Parser_Block $value Original block.
 	 */
-	protected function setValue( $value ) {
+	protected function setValue( $value ): void {
 		parent::setValue( $value );
 
 		$this->current_block_name = $this->value instanceof WP_Block_Parser_Block ? $this->value->blockName : '';
@@ -143,6 +148,7 @@ final class Block_Name extends Block_Validator {
 	 * @param string|string[] $name Names.
 	 */
 	protected function setName( $name ): void {
-		$this->options['name'] = $name;
+		$this->options['name']  = $name;
+		$this->name_for_message = self::message_value( $name );
 	}
 }

@@ -402,6 +402,8 @@ The abstract `Alley\WP\Validator\BlockValidator` class extends `Alley\Validator\
 
 When extending `BlockValidator`, validation logic goes into a `test_block()` method. `test_block()` always receives a `\WP_Block_Parser_Block` instance; validation will automatically fail if the input is not an instance of `\WP_Block`, `\WP_Block_Parser_Block`, or an array representation of a block.
 
+Subclasses that declare `$messageTemplates` or `$messageVariables` must type them as `array` (for example, `protected array $messageTemplates = [ ... ];`), as Laminas Validator 3 requires.
+
 ### `Block_Attribute`
 
 `Alley\WP\Validator\Block_Attribute` validates whether the block contains, or does not contain, the specified attribute name, value, or name-value pair.

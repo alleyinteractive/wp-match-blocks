@@ -34,22 +34,27 @@ final class Block_Offset extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
-	 * @var string[]
+	 * @var array<string, string>
 	 */
-	protected $messageTemplates = [
+	protected array $messageTemplates = [
 		self::NOT_AT_OFFSET => '',
 	];
 
 	/**
 	 * Array of additional variables available for validation failure messages.
 	 *
-	 * @var mixed[]
+	 * @var array<string, string|array<string, string>>
 	 */
-	protected $messageVariables = [
-		'offset' => [
-			'options' => 'offset',
-		],
+	protected array $messageVariables = [
+		'offset' => 'offset_for_message',
 	];
+
+	/**
+	 * The 'offset' option, formatted for use in error messages.
+	 *
+	 * @var string
+	 */
+	protected string $offset_for_message = '0';
 
 	/**
 	 * Options for this validator.
@@ -168,7 +173,8 @@ final class Block_Offset extends Block_Validator {
 	protected function setOffset( $offset ): void {
 		$offset = \is_array( $offset ) ? array_map( 'intval', $offset ) : (int) $offset;
 
-		$this->options['offset'] = $offset;
+		$this->options['offset']  = $offset;
+		$this->offset_for_message = self::message_value( $offset );
 	}
 
 	/**

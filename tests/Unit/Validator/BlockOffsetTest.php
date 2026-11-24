@@ -172,6 +172,29 @@ final class BlockOffsetTest extends Test_Case {
 					'not_at_offset' => 'Must be at offset -99 within the blocks.',
 				],
 			],
+			[
+				$blocks[0],
+				[
+					'blocks'            => self::blocks(),
+					'offset'            => [ 3, 4 ],
+					'skip_empty_blocks' => true,
+				],
+				[
+					'not_at_offset' => 'Must be at offset [3, 4] within the blocks.',
+				],
+			],
+			[
+				$blocks[0],
+				[
+					'blocks'            => self::blocks(),
+					'offset'            => 3,
+					'messages'          => [ 'not_at_offset' => 'Custom message for offset %offset%.' ],
+					'skip_empty_blocks' => true,
+				],
+				[
+					'not_at_offset' => 'Custom message for offset 3.',
+				],
+			],
 		];
 	}
 

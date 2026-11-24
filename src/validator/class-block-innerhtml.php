@@ -35,9 +35,9 @@ final class Block_InnerHTML extends Block_Validator {
 	/**
 	 * Array of validation failure message templates.
 	 *
-	 * @var string[]
+	 * @var array<string, string>
 	 */
-	protected $messageTemplates = [
+	protected array $messageTemplates = [
 		self::NO_MATCHING_INNERHTML => '',
 	];
 
